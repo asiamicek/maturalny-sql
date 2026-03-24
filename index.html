@@ -23,8 +23,8 @@
 		height: 100vh;
 		overflow: hidden;
 	}
-	/* SIDEBAR */
 	
+    /* SIDEBAR */
 	#sidebar {
 		width: var(--sidebar-w);
 		height: 100vh;
@@ -34,6 +34,8 @@
 		overflow-y: auto;
 		display: flex;
 		flex-direction: column;
+        z-index: 1000;
+        transition: transform 0.3s ease-in-out;
 	}
 	
 	.sidebar-header {
@@ -73,14 +75,12 @@
 	.nav-link.active {
 		background: var(--secondary);
 		color: white !important;
-		/* Wymuszamy biały kolor dla czytelności */
 		border-left: 5px solid var(--accent);
-		/* Zmieniamy biały pasek na pomarańczowy akcent */
 		font-weight: bold;
 	}
-	/* MAIN CONTENT */
 	
-	main {
+    /* MAIN CONTENT */
+	#main-content {
 		margin-left: var(--sidebar-w);
 		padding: 40px;
 		width: calc(100% - var(--sidebar-w));
@@ -102,23 +102,25 @@
 	.lesson-content.active {
 		display: block;
 	}
-	/* WIDGETS */
 	
+    /* WIDGETS */
 	.code-container {
 		position: relative;
 		background: #282c34;
 		border-radius: 8px;
 		margin: 20px 0;
 		border: 1px solid #444;
+        width: 100%;
+        overflow-x: auto;
 	}
 	
 	pre {
 		margin: 0;
 		padding: 20px;
 		color: #abb2bf;
-		overflow-x: auto;
 		font-family: 'Consolas', monospace;
 		font-size: 0.9rem;
+        white-space: pre;
 	}
 	
 	.copy-btn {
@@ -131,6 +133,7 @@
 		padding: 6px 12px;
 		border-radius: 4px;
 		cursor: pointer;
+        z-index: 10;
 	}
 	
 	.copy-btn:hover {
@@ -157,8 +160,8 @@
 		color: var(--primary);
 		margin-top: 0;
 	}
-	/* Styl dla ukrytych odpowiedzi */
 	
+    /* ZADANIA I QUIZ */
 	.answer-details {
 		background: #f9f9f9;
 		border: 1px dashed #ccc;
@@ -180,7 +183,6 @@
 		background: #fff;
 		border-left: 3px solid #27ae60;
 	}
-	/* Styl dla przycisków wewnątrz quizu */
 	
 	.quiz-check-btn {
 		background-color: #3498db;
@@ -193,45 +195,17 @@
 		font-weight: bold;
 		transition: background 0.3s;
 		display: inline-block;
-		/* Gwarantuje widoczność */
 	}
 	
 	.quiz-check-btn:hover {
 		background-color: #2980b9;
 	}
-	/* Styl dla pól tekstowych, gdy są zablokowane (poprawna odpowiedź) */
 	
 	input:disabled {
 		background-color: #e8f5e9;
 		color: #2e7d32;
 		cursor: not-allowed;
 	}
-	/* Dodaj to do swojego <style>, aby pole tekstowe pasowało do reszty */
-	
-	.sql-input-field {
-		width: 100%;
-		padding: 12px;
-		border: 1px solid #ccc;
-		border-radius: 8px;
-		/* Zaokrąglone rogi jak w reszcie kursu */
-		font-family: 'Consolas', monospace;
-		font-size: 0.9rem;
-		box-sizing: border-box;
-		margin-top: 10px;
-		transition: border-color 0.3s;
-	}
-	
-	.sql-input-field:focus {
-		border-color: var(--secondary);
-		outline: none;
-		box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
-	}
-	/* Specjalna klasa dla zadań w quizie, aby nie były całe pomarańczowe */
-	
-	.quiz-task {
-		background-color: white !important;
-	}
-	/* Styl dla pola wpisywania (żeby było ładne i zaokrąglone) */
 	
 	.sql-input-field {
 		width: 100%;
@@ -250,41 +224,150 @@
 		outline: none;
 		box-shadow: 0 0 8px rgba(52, 152, 219, 0.2);
 	}
+	
+	.quiz-task {
+		background-color: white !important;
+	}
+
+    /* PRZYCISK MENU MOBILNEGO */
+    .mobile-menu-btn {
+        display: none;
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        z-index: 1100;
+        background: var(--primary);
+        border: 2px solid white;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .mobile-menu-btn span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        background-color: white;
+    }
+
+    /* --- STYLIZACJA RESPONSYWNA (TELEFONY) --- */
+    @media screen and (max-width: 768px) {
+        body {
+            flex-direction: column;
+        }
+
+        .mobile-menu-btn {
+            display: flex; /* Pokazujemy przycisk hamburgera */
+        }
+
+        /* Wymuszamy chowanie prawdziwego menu */
+        #sidebar {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 280px !important;
+            height: 100vh !important;
+            margin: 0 !important;
+            padding-top: 10px !important;
+            z-index: 9999 !important;
+            background-color: var(--primary) !important;
+            transform: translateX(-100%) !important; /* Menu poza ekranem */
+            display: block !important; 
+        }
+
+        /* Klasa dodawana przez JS w celu pokazania menu */
+        #sidebar.active {
+            transform: translateX(0) !important;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+        }
+
+        #main-content {
+            margin-left: 0 !important;
+            width: 100% !important;
+            padding: 15px !important;
+            padding-top: 70px !important; /* Miejsce na przycisk u góry */
+            height: 100vh !important;
+            overflow-y: auto !important;
+        }
+
+        .lesson-content {
+            padding: 20px;
+            margin-bottom: 50px;
+        }
+
+        .nav-link {
+            padding: 12px 25px;
+            font-size: 16px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+        }
+
+        .code-container {
+            font-size: 13px;
+        }
+
+        table {
+            display: block;
+            overflow-x: auto;
+            width: 100%;
+        }
+    }
 	</style>
 </head>
 
 <body>
+
+    <button class="mobile-menu-btn" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
 	<nav id="sidebar">
 		<div class="sidebar-header">
-			<h3>Maturalny SQL</h3></div>
+			<h3>Maturalny SQL</h3>
+        </div>
 		<div class="module-group">
-			<div class="module-title">Moduł 1: Podstawy</div> <a href="#" class="nav-link active" onclick="showLesson('m1-l1', this)">1.1. Co to jest SQL?</a> <a href="#" class="nav-link" onclick="showLesson('m1-l2', this)">1.2. Konfiguracja bazy</a> <a href="#" class="nav-link" onclick="showLesson('m1-l3', this)">1.3. Pierwszy SELECT</a> <a href="#" class="nav-link" style="color: #e67e22; font-weight: bold;" onclick="showLesson('m1-test', this)">⚡ Trening</a> </div>
+			<div class="module-title">Moduł 1: Podstawy</div> 
+            <a href="#" class="nav-link active" onclick="showLesson('m1-l1', this)">1.1. Co to jest SQL?</a> 
+            <a href="#" class="nav-link" onclick="showLesson('m1-l2', this)">1.2. Konfiguracja bazy</a> 
+            <a href="#" class="nav-link" onclick="showLesson('m1-l3', this)">1.3. Pierwszy SELECT</a> 
+            <a href="#" class="nav-link" style="color: #e67e22; font-weight: bold;" onclick="showLesson('m1-test', this)">⚡ Trening</a> 
+        </div>
 		<div class="module-group">
-			<div class="module-title">Moduł 2: Kryteria i Funkcje Wyboru</div> <a href="#" class="nav-link" onclick="showLesson('m2-l1', this)">2.1. Klauzula WHERE</a> <a href="#" class="nav-link" onclick="showLesson('m2-l2', this)">2.2. Operatory AND, OR, NOT</a> <a href="#" class="nav-link" onclick="showLesson('m2-l3', this)">2.3. Operator LIKE</a> <a href="#" class="nav-link" onclick="showLesson('m2-l4', this)">2.4. Zbiory i zakresy (IN, BETWEEN)</a> <a href="#" class="nav-link" onclick="showLesson('m2-l5', this)">2.5. Funkcje dat - YEAR, MONTH, DAY</a> <a href="#" class="nav-link" onclick="showLesson('m2-l6', this)">2.6. Sortowanie i wybieranie rekordów</a> <a href="#" class="nav-link" style="color: #e67e22; font-weight: bold;" onclick="showLesson('m2-test', this)">⚡ Trening</a> </div>
+			<div class="module-title">Moduł 2: Kryteria i Funkcje Wyboru</div> 
+            <a href="#" class="nav-link" onclick="showLesson('m2-l1', this)">2.1. Klauzula WHERE</a> 
+            <a href="#" class="nav-link" onclick="showLesson('m2-l2', this)">2.2. Operatory AND, OR, NOT</a> 
+            <a href="#" class="nav-link" onclick="showLesson('m2-l3', this)">2.3. Operator LIKE</a> 
+            <a href="#" class="nav-link" onclick="showLesson('m2-l4', this)">2.4. Zbiory i zakresy (IN, BETWEEN)</a> 
+            <a href="#" class="nav-link" onclick="showLesson('m2-l5', this)">2.5. Funkcje dat - YEAR, MONTH, DAY</a> 
+            <a href="#" class="nav-link" onclick="showLesson('m2-l6', this)">2.6. Sortowanie i wybieranie rekordów</a> 
+            <a href="#" class="nav-link" style="color: #e67e22; font-weight: bold;" onclick="showLesson('m2-test', this)">⚡ Trening</a> 
+        </div>
 		<div class="module-group">
-    <div class="module-title">Moduł 3: Agregacja i Grupowanie</div>
-    <a href="#" class="nav-link" onclick="showLesson('m3-l1', this)">3.1. Funkcje agregujące (SUM, AVG...)</a>
-    <a href="#" class="nav-link" onclick="showLesson('m3-l2', this)">3.2. Grupowanie (GROUP BY)</a>
-    <a href="#" class="nav-link" onclick="showLesson('m3-l3', this)">3.3. Filtrowanie grup (HAVING)</a>
-    <!-- <a href="#" class="nav-link" onclick="showLesson('m3-quiz', this)">📊 QUIZ: Statystyki</a> -->
-</div>
-
-<div class="module-group">
-    <div class="module-title">Moduł 4: Relacje (JOIN)</div>
-    <a href="#" class="nav-link" onclick="showLesson('m4-l1', this)">4.1. Idea relacji i klucze</a>
-    <a href="#" class="nav-link" onclick="showLesson('m4-l2', this)">4.2. Łączenie wewnętrzne (INNER JOIN)</a>
-    <a href="#" class="nav-link" onclick="showLesson('m4-l3', this)">4.3. Łączenie wielu tabel</a>
-    <!-- <a href="#" class="nav-link" onclick="showLesson('m4-quiz', this)">🏆 TEST KOŃCOWY</a> -->
-</div>
-<div class="module-group">
-    <div class="module-title">Moduł 5: Zaawansowane Techniki</div>
-    <a href="#" class="nav-link" onclick="showLesson('m5-l1', this)">5.1. Operacje na zbiorach (UNION)</a>
-    <a href="#" class="nav-link" onclick="showLesson('m5-l2', this)">5.2. Podzapytania (Subqueries)</a>
-    <a href="#" class="nav-link" onclick="showLesson('m5-l3', this)">5.3. Parametry i zapytania krzyżowe</a>
-    <!-- <a href="#" class="nav-link" onclick="showLesson('m5-quiz', this)">🚀 MASTER QUIZ</a> -->
-</div>
-
+            <div class="module-title">Moduł 3: Agregacja i Grupowanie</div>
+            <a href="#" class="nav-link" onclick="showLesson('m3-l1', this)">3.1. Funkcje agregujące (SUM, AVG...)</a>
+            <a href="#" class="nav-link" onclick="showLesson('m3-l2', this)">3.2. Grupowanie (GROUP BY)</a>
+            <a href="#" class="nav-link" onclick="showLesson('m3-l3', this)">3.3. Filtrowanie grup (HAVING)</a>
+        </div>
+        <div class="module-group">
+            <div class="module-title">Moduł 4: Relacje (JOIN)</div>
+            <a href="#" class="nav-link" onclick="showLesson('m4-l1', this)">4.1. Idea relacji i klucze</a>
+            <a href="#" class="nav-link" onclick="showLesson('m4-l2', this)">4.2. Łączenie wewnętrzne (INNER JOIN)</a>
+            <a href="#" class="nav-link" onclick="showLesson('m4-l3', this)">4.3. Łączenie wielu tabel</a>
+        </div>
+        <div class="module-group">
+            <div class="module-title">Moduł 5: Zaawansowane Techniki</div>
+            <a href="#" class="nav-link" onclick="showLesson('m5-l1', this)">5.1. Operacje na zbiorach (UNION)</a>
+            <a href="#" class="nav-link" onclick="showLesson('m5-l2', this)">5.2. Podzapytania (Subqueries)</a>
+            <a href="#" class="nav-link" onclick="showLesson('m5-l3', this)">5.3. Parametry i zapytania krzyżowe</a>
+        </div>
 	</nav>
+
 	<main id="main-content">
 		<section id="m1-l1" class="lesson-content active">
 			<h1>1.1. Co to jest SQL?</h1>
@@ -345,6 +428,7 @@
 				</details>
 			</div>
 		</section>
+
 		<section id="m1-l2" class="lesson-content">
 			<h1>1.2. Konfiguracja bazy danych</h1>
 			<p>Aby móc wpisywać polecenia SQL i widzieć ich efekty, potrzebujemy bazy danych. W tym kursie korzystamy z kompilatora online, który nie wymaga instalacji.</p>
@@ -411,6 +495,7 @@ INSERT INTO Produkty VALUES (3, 'Pralka LG', 'AGD', 1800.00, 5);
 				</details>
 			</div>
 		</section>
+
 		<section id="m1-l3" class="lesson-content">
 			<h1>1.3. Pierwszy SELECT i Aliasy</h1>
 			<p>W poprzedniej lekcji używaliśmy <code>SELECT *</code>, aby zobaczyć wszystko. W praktyce jednak rzadko potrzebujemy wszystkich kolumn. Zazwyczaj wybieramy tylko te dane, które są nam w danej chwili potrzebne.</p>
@@ -451,6 +536,7 @@ FROM Produkty;</pre> </div>
 				</details>
 			</div>
 		</section>
+
 		<section id="m1-test" class="lesson-content">
 			<h1>📝 Sprawdzian: Moduł 1 - Podstawy SQL</h1>
 			<p>Zanim przejdziesz do filtrowania danych, sprawdź czy pamiętasz fundamenty. Wybierz poprawne odpowiedzi.</p>
@@ -492,6 +578,7 @@ FROM Produkty;</pre> </div>
 				<p>🎉 Gratulacje! Opanowałeś podstawy. Jesteś gotowy na <strong>Moduł 2: Filtrowanie danych</strong>.</p>
 			</div>
 		</section>
+
 		<section id="m2-l1" class="lesson-content">
 			<h1>2.1. Filtrowanie danych - Klauzula WHERE</h1>
 			<p>Klauzula <code>WHERE</code> pozwala ograniczyć liczbę wyświetlanych wierszy do tych, które spełniają określone przez nas warunki. To najważniejsze narzędzie do przeszukiwania bazy.</p>
@@ -499,9 +586,9 @@ FROM Produkty;</pre> </div>
 			<p>W SQL używamy standardowych znaków matematycznych:</p>
 			<ul>
 				<li><code>=</code> (Równe)</li>
-				<li><code><></code> lub <code>!=</code> (Różne od)</li>
-				<li><code><</code> , <code>></code> (Mniejsze, Większe)</li>
-				<li><code><=</code> , <code>>=</code> (Mniejsze/Większe lub równe)</li>
+				<li><code>&lt;&gt;</code> lub <code>!=</code> (Różne od)</li>
+				<li><code>&lt;</code> , <code>&gt;</code> (Mniejsze, Większe)</li>
+				<li><code>&lt;=</code> , <code>&gt;=</code> (Mniejsze/Większe lub równe)</li>
 			</ul>
 			<h2>Przykłady użycia</h2>
 			<h3>1. Filtrowanie liczb</h3>
@@ -529,10 +616,11 @@ SELECT imie, nazwisko FROM Uczniowie WHERE klasa = '2B';</pre> </div>
 				<p><strong>Zadanie 3:</strong> Wyświetl wszystkie oceny z tabeli <code>Oceny</code>, które są niższe niż 4.</p>
 				<details class="answer-details">
 					<summary>Kliknij, aby zobaczyć odpowiedź</summary>
-					<div class="answer-content"> <code>SELECT * FROM Oceny WHERE ocena < 4;</code> </div>
+					<div class="answer-content"> <code>SELECT * FROM Oceny WHERE ocena &lt; 4;</code> </div>
 				</details>
 			</div>
 		</section>
+
 		<section id="m2-l2" class="lesson-content">
 			<h1>2.2. Operatory logiczne: AND, OR, NOT</h1>
 			<p>W rzeczywistości rzadko szukamy danych spełniających tylko jeden warunek. Zazwyczaj potrzebujemy kombinacji, np. "produkty z kategorii Elektronika, które kosztują mniej niż 200 zł". Do tego służą operatory logiczne.</p>
@@ -559,7 +647,7 @@ WHERE NOT kategoria = 'AGD';</pre> </div>
 			<p><strong>Przykład:</strong> Wyświetl produkty z kategorii 'Elektronika', których cena jest wyższa niż 100 zł, ale mniejsza niż 2000 zł.</p>
 			<div class="code-container">
 				<button class="copy-btn" onclick="copyCode(this)">Kopiuj</button> <pre>SELECT * FROM Produkty 
-WHERE kategoria = 'Elektronika' AND cena > 100 AND cena < 2000;</pre> </div>
+WHERE kategoria = 'Elektronika' AND cena > 100 AND cena &lt; 2000;</pre> </div>
 			<div class="task-box">
 				<h3>Zadania do samodzielnego wykonania</h3>
 				<p><strong>Zadanie 1:</strong> Wyświetl uczniów, którzy nazywają się 'Nowak' i są z klasy '2B'.</p>
@@ -575,10 +663,11 @@ WHERE kategoria = 'Elektronika' AND cena > 100 AND cena < 2000;</pre> </div>
 				<p><strong>Zadanie 3:</strong> Wyświetl produkty, które są z kategorii 'Elektronika' i mają cenę różną od 150.00 zł.</p>
 				<details class="answer-details">
 					<summary>Kliknij, aby zobaczyć odpowiedź</summary>
-					<div class="answer-content"> <code>SELECT * FROM Produkty WHERE kategoria = 'Elektronika' AND cena <> 150.00;</code> </div>
+					<div class="answer-content"> <code>SELECT * FROM Produkty WHERE kategoria = 'Elektronika' AND cena &lt;&gt; 150.00;</code> </div>
 				</details>
 			</div>
 		</section>
+
 		<section id="m2-l3" class="lesson-content">
 			<h1>2.3. Wyszukiwanie wzorców - Operator LIKE</h1>
 			<p>Operator <code>LIKE</code> jest używany, gdy nie szukamy konkretnej wartości, ale tekstu pasującego do pewnego wzorca (np. nazwisk na literę 'P' lub telefonów zaczynających się od '605').</p>
@@ -624,6 +713,7 @@ SELECT * FROM Uczniowie WHERE nazwisko LIKE 'K?w*';</pre> </div>
 				</details>
 			</div>
 		</section>
+
 		<section id="m2-l4" class="lesson-content">
 			<h1>2.4. Praca na zbiorach i zakresach - IN oraz BETWEEN</h1>
 			<p>Zamiast pisać długie łańcuchy warunków typu <code>id=1 OR id=2 OR id=3</code>, możemy użyć operatorów zbiorowych. Dzięki temu zapytania są krótsze i czytelniejsze.</p>
@@ -663,6 +753,7 @@ WHERE cena BETWEEN 100 AND 1000;</pre> </div>
 				</details>
 			</div>
 		</section>
+
 		<section id="m2-l5" class="lesson-content">
 			<h1>2.5. Funkcje dat - YEAR, MONTH, DAY</h1>
 			<p>W bazach danych MS Access często nie potrzebujemy pełnej daty (np. <i>2023-10-15</i>), a jedynie konkretną informację: rok, miesiąc lub dzień. Służą do tego wbudowane funkcje, które "wycinają" interesujący nas fragment z pola typu data.</p>
@@ -698,68 +789,66 @@ WHERE MONTH(data_wystawienia) = 5;</pre> </div>
 				</details>
 			</div>
 		</section>
+
 		<section id="m2-l6" class="lesson-content">
-    <h1>Lekcja 2.6: Sortowanie i wybieranie rekordów (TOP)</h1>
-    <p>Samo wyfiltrowanie danych to połowa sukcesu. Często musimy je uporządkować lub wyciągnąć tylko te rekordy, które znajdują się na samym szczycie listy (np. najdroższy produkt).</p>
+            <h1>Lekcja 2.6: Sortowanie i wybieranie rekordów (TOP)</h1>
+            <p>Samo wyfiltrowanie danych to połowa sukcesu. Często musimy je uporządkować lub wyciągnąć tylko te rekordy, które znajdują się na samym szczycie listy (np. najdroższy produkt).</p>
 
-    <div class="info-box">
-        <strong>Klauzula ORDER BY:</strong>
-        <p>Służy do sortowania wyników według jednej lub kilku kolumn.</p>
-        <ul>
-            <li><code>ASC</code> – sortowanie rosnąco (domyślne, od A do Z, od 1 do 100).</li>
-            <li><code>DESC</code> – sortowanie malejąco (od Z do A, od 100 do 1).</li>
-        </ul>
-    </div>
+            <div class="info-box">
+                <strong>Klauzula ORDER BY:</strong>
+                <p>Służy do sortowania wyników według jednej lub kilku kolumn.</p>
+                <ul>
+                    <li><code>ASC</code> – sortowanie rosnąco (domyślne, od A do Z, od 1 do 100).</li>
+                    <li><code>DESC</code> – sortowanie malejąco (od Z do A, od 100 do 1).</li>
+                </ul>
+            </div>
 
-    <h2>1. Sortowanie podstawowe</h2>
-    <p>Wyświetlmy uczniów posortowanych alfabetycznie według nazwiska:</p>
-    <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
-        <pre>SELECT * FROM Uczniowie ORDER BY Nazwisko ASC;</pre>
-    </div>
+            <h2>1. Sortowanie podstawowe</h2>
+            <p>Wyświetlmy uczniów posortowanych alfabetycznie według nazwiska:</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
+                <pre>SELECT * FROM Uczniowie ORDER BY Nazwisko ASC;</pre>
+            </div>
 
-    
-
-    <h2>2. Wybieranie rekordów z góry (TOP)</h2>
-    <p>W MS Access słowo <code>TOP</code> pozwala ograniczyć liczbę wyświetlanych wierszy do tych, które po przesortowaniu znalazły się na początku.</p>
-    
-    <div class="task-box" style="border-left-color: #9b59b6; background-color: #f5eef8;">
-        <strong>Przykład: Najwyższa ocena</strong>
-        <p>Aby znaleźć ucznia z najwyższą oceną, musimy najpierw posortować oceny <b>malejąco</b>, a potem wziąć tylko pierwszy rekord:</p>
-        <div class="code-container">
-            <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
-            <pre>SELECT TOP 1 Nazwisko, Ocena 
+            <h2>2. Wybieranie rekordów z góry (TOP)</h2>
+            <p>W MS Access słowo <code>TOP</code> pozwala ograniczyć liczbę wyświetlanych wierszy do tych, które po przesortowaniu znalazły się na początku.</p>
+            
+            <div class="task-box" style="border-left-color: #9b59b6; background-color: #f5eef8;">
+                <strong>Przykład: Najwyższa ocena</strong>
+                <p>Aby znaleźć ucznia z najwyższą oceną, musimy najpierw posortować oceny <b>malejąco</b>, a potem wziąć tylko pierwszy rekord:</p>
+                <div class="code-container">
+                    <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
+                    <pre>SELECT TOP 1 Nazwisko, Ocena 
 FROM Oceny 
 ORDER BY Ocena DESC;</pre>
-        </div>
-    </div>
-
-    
-
-    <h2>3. Najstarszy lub najmłodszy (Sortowanie dat)</h2>
-    <p>Sortowanie dat bywa mylące, ale pamiętaj:</p>
-    <ul>
-        <li><code>ORDER BY Data_Urodzenia ASC</code> – pokaże najstarsze osoby (najwcześniejsze daty).</li>
-        <li><code>ORDER BY Data_Urodzenia DESC</code> – pokaże najmłodsze osoby (najpóźniejsze daty).</li>
-    </ul>
-
-    <div class="task-box">
-        <strong>Zadanie kontrolne:</strong>
-        <p>Napisz zapytanie, które wyświetli <b>tylko jeden</b> najtańszy produkt z tabeli <code>Produkty</code>.</p>
-        
-        <details class="answer-details">
-            <summary>Pokaż rozwiązanie</summary>
-            <div class="answer-content">
-                <p>Używamy <code>TOP 1</code> oraz sortowania rosnącego (<code>ASC</code>):</p>
-                <code>SELECT TOP 1 Nazwa_Produktu, Cena FROM Produkty ORDER BY Cena ASC;</code>
+                </div>
             </div>
-        </details>
-    </div>
 
-    <div class="info-box" style="background-color: #e3f2fd; border-left-color: #2196f3;">
-        <strong>Ważne:</strong> Klauzula <code>TOP</code> zawsze występuje bezpośrednio po słowie <code>SELECT</code>, natomiast <code>ORDER BY</code> zawsze na samym końcu zapytania.
-    </div>
-</section>
+            <h2>3. Najstarszy lub najmłodszy (Sortowanie dat)</h2>
+            <p>Sortowanie dat bywa mylące, ale pamiętaj:</p>
+            <ul>
+                <li><code>ORDER BY Data_Urodzenia ASC</code> – pokaże najstarsze osoby (najwcześniejsze daty).</li>
+                <li><code>ORDER BY Data_Urodzenia DESC</code> – pokaże najmłodsze osoby (najpóźniejsze daty).</li>
+            </ul>
+
+            <div class="task-box">
+                <strong>Zadanie kontrolne:</strong>
+                <p>Napisz zapytanie, które wyświetli <b>tylko jeden</b> najtańszy produkt z tabeli <code>Produkty</code>.</p>
+                
+                <details class="answer-details">
+                    <summary>Pokaż rozwiązanie</summary>
+                    <div class="answer-content">
+                        <p>Używamy <code>TOP 1</code> oraz sortowania rosnącego (<code>ASC</code>):</p>
+                        <code>SELECT TOP 1 Nazwa_Produktu, Cena FROM Produkty ORDER BY Cena ASC;</code>
+                    </div>
+                </details>
+            </div>
+
+            <div class="info-box" style="background-color: #e3f2fd; border-left-color: #2196f3;">
+                <strong>Ważne:</strong> Klauzula <code>TOP</code> zawsze występuje bezpośrednio po słowie <code>SELECT</code>, natomiast <code>ORDER BY</code> zawsze na samym końcu zapytania.
+            </div>
+        </section>
+
 		<section id="m2-test" class="lesson-content">
 			<h1>📝 Interaktywny Sprawdzian: Moduł 2</h1>
 			<div class="info-box" style="background-color: #f0f7ff; border-left: 5px solid #2196F3;"> <strong>Instrukcja:</strong>
@@ -781,581 +870,551 @@ ORDER BY Ocena DESC;</pre>
 				<p>Możesz teraz przejść do <strong>Modułu 3: Relacje i łączenie tabel</strong>.</p>
 			</div>
 		</section>
+
 		<section id="m3-l1" class="lesson-content">
-    <h1>3.1. Funkcje Agregujące (SUM, AVG, COUNT...)</h1>
-    <p>Do tej pory wybieraliśmy konkretne wiersze z bazy. Funkcje agregujące pozwalają na coś więcej – wykonują obliczenia na wielu rekordach i zwracają <strong>pojedynczy wynik</strong> (np. sumę wszystkich wydatków lub średnią ocen klasy).</p>
+            <h1>3.1. Funkcje Agregujące (SUM, AVG, COUNT...)</h1>
+            <p>Do tej pory wybieraliśmy konkretne wiersze z bazy. Funkcje agregujące pozwalają na coś więcej – wykonują obliczenia na wielu rekordach i zwracają <strong>pojedynczy wynik</strong> (np. sumę wszystkich wydatków lub średnią ocen klasy).</p>
 
-    <div class="info-box">
-        <strong>Najważniejsze funkcje w MS Access SQL:</strong>
-        <ul>
-            <li><code>COUNT(*)</code> lub <code>COUNT(kolumna)</code> – zlicza liczbę rekordów.</li>
-            <li><code>SUM(kolumna)</code> – sumuje wartości (tylko dla liczb).</li>
-            <li><code>AVG(kolumna)</code> – oblicza średnią arytmetyczną (tylko dla liczb).</li>
-            <li><code>MAX(kolumna)</code> i <code>MIN(kolumna)</code> – znajduje wartość największą i najmniejszą.</li>
-        </ul>
-    </div>
-
-    
-
-    <h2>1. Zliczanie rekordów (COUNT)</h2>
-    <p>Funkcja <code>COUNT</code> jest najczęściej używana. Możesz policzyć wszystkich uczniów w tabeli:</p>
-    <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
-        <pre>SELECT COUNT(*) AS [Liczba wszystkich uczniów] FROM Uczniowie;</pre>
-    </div>
-
-    <h2>2. Średnia i Suma (AVG, SUM)</h2>
-    <p>Działają tylko na polach liczbowych (np. cena, ocena, wiek). Przykład obliczenia średniej ceny produktów:</p>
-    <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
-        <pre>SELECT AVG(cena) AS SredniaCena FROM Produkty;</pre>
-    </div>
-
-    <h2>3. Filtrowanie przed agregacją</h2>
-    <p>Możesz łączyć funkcje agregujące z klauzulą <code>WHERE</code>. Na przykład, aby policzyć tylko uczniów z klasy '2B':</p>
-    <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
-        <pre>SELECT COUNT(*) FROM Uczniowie WHERE klasa = '2B';</pre>
-    </div>
-
-    <div class="task-box">
-        <strong>Mini-zadanie:</strong>
-        <p>Jak sprawdzić, jaka jest najwyższa ocena wystawiona w tabeli <code>Oceny</code>?</p>
-        
-        <details class="answer-details">
-            <summary>Pokaż podpowiedź i rozwiązanie</summary>
-            <div class="answer-content">
-                <p>Używamy funkcji <code>MAX</code> na kolumnie <code>ocena</code>:</p>
-                <code>SELECT MAX(ocena) FROM Oceny;</code>
+            <div class="info-box">
+                <strong>Najważniejsze funkcje w MS Access SQL:</strong>
+                <ul>
+                    <li><code>COUNT(*)</code> lub <code>COUNT(kolumna)</code> – zlicza liczbę rekordów.</li>
+                    <li><code>SUM(kolumna)</code> – sumuje wartości (tylko dla liczb).</li>
+                    <li><code>AVG(kolumna)</code> – oblicza średnią arytmetyczną (tylko dla liczb).</li>
+                    <li><code>MAX(kolumna)</code> i <code>MIN(kolumna)</code> – znajduje wartość największą i najmniejszą.</li>
+                </ul>
             </div>
-        </details>
-    </div>
 
-    <div class="info-box" style="background-color: #fff9c4; border-left-color: #fbc02d;">
-        <strong>Ważna uwaga o Aliasach (AS):</strong>
-        <p>W Accessie wynik funkcji agregującej często nazywa się "Expr1001". Używaj <code>AS NowaNazwa</code>, aby wynik był czytelny w raporcie!</p>
-    </div>
-</section>
+            <h2>1. Zliczanie rekordów (COUNT)</h2>
+            <p>Funkcja <code>COUNT</code> jest najczęściej używana. Możesz policzyć wszystkich uczniów w tabeli:</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
+                <pre>SELECT COUNT(*) AS [Liczba wszystkich uczniów] FROM Uczniowie;</pre>
+            </div>
+
+            <h2>2. Średnia i Suma (AVG, SUM)</h2>
+            <p>Działają tylko na polach liczbowych (np. cena, ocena, wiek). Przykład obliczenia średniej ceny produktów:</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
+                <pre>SELECT AVG(cena) AS SredniaCena FROM Produkty;</pre>
+            </div>
+
+            <h2>3. Filtrowanie przed agregacją</h2>
+            <p>Możesz łączyć funkcje agregujące z klauzulą <code>WHERE</code>. Na przykład, aby policzyć tylko uczniów z klasy '2B':</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
+                <pre>SELECT COUNT(*) FROM Uczniowie WHERE klasa = '2B';</pre>
+            </div>
+
+            <div class="task-box">
+                <strong>Mini-zadanie:</strong>
+                <p>Jak sprawdzić, jaka jest najwyższa ocena wystawiona w tabeli <code>Oceny</code>?</p>
+                
+                <details class="answer-details">
+                    <summary>Pokaż podpowiedź i rozwiązanie</summary>
+                    <div class="answer-content">
+                        <p>Używamy funkcji <code>MAX</code> na kolumnie <code>ocena</code>:</p>
+                        <code>SELECT MAX(ocena) FROM Oceny;</code>
+                    </div>
+                </details>
+            </div>
+
+            <div class="info-box" style="background-color: #fff9c4; border-left-color: #fbc02d;">
+                <strong>Ważna uwaga o Aliasach (AS):</strong>
+                <p>W Accessie wynik funkcji agregującej często nazywa się "Expr1001". Używaj <code>AS NowaNazwa</code>, aby wynik był czytelny w raporcie!</p>
+            </div>
+        </section>
 
 		<section id="m3-l2" class="lesson-content">
-    <h1>3.2. Grupowanie danych (GROUP BY)</h1>
-    <p>Sama funkcja <code>AVG</code> powie Ci, jaka jest średnia ocen w całej szkole. Ale co, jeśli chcesz poznać średnią <strong>dla każdej klasy z osobna</strong>? Do tego służy klauzula <code>GROUP BY</code>.</p>
+            <h1>3.2. Grupowanie danych (GROUP BY)</h1>
+            <p>Sama funkcja <code>AVG</code> powie Ci, jaka jest średnia ocen w całej szkole. Ale co, jeśli chcesz poznać średnią <strong>dla każdej klasy z osobna</strong>? Do tego służy klauzula <code>GROUP BY</code>.</p>
 
-    <div class="info-box">
-        <strong>Zasada działania:</strong>
-        <p><code>GROUP BY</code> "rozcina" tabelę na mniejsze paczki według wartości w wybranej kolumnie, a następnie wykonuje obliczenia (np. <code>COUNT</code> lub <code>SUM</code>) dla każdej z tych paczek oddzielnie.</p>
-    </div>
+            <div class="info-box">
+                <strong>Zasada działania:</strong>
+                <p><code>GROUP BY</code> "rozcina" tabelę na mniejsze paczki według wartości w wybranej kolumnie, a następnie wykonuje obliczenia (np. <code>COUNT</code> lub <code>SUM</code>) dla każdej z tych paczek oddzielnie.</p>
+            </div>
 
-    
-
-    <h2>1. Przykład: Liczba osób w klasach</h2>
-    <p>Aby sprawdzić, ilu uczniów jest w każdej z klas, musimy pogrupować ich według kolumny <code>klasa</code>:</p>
-    <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
-        <pre>SELECT klasa, COUNT(*) AS LiczbaUczniow 
+            <h2>1. Przykład: Liczba osób w klasach</h2>
+            <p>Aby sprawdzić, ilu uczniów jest w każdej z klas, musimy pogrupować ich według kolumny <code>klasa</code>:</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
+                <pre>SELECT klasa, COUNT(*) AS LiczbaUczniow 
 FROM Uczniowie 
 GROUP BY klasa;</pre>
-    </div>
+            </div>
 
-    <h2>2. Przykład: Średnia cena w kategoriach</h2>
-    <p>W tabeli <code>Produkty</code> możemy sprawdzić średnią cenę dla każdej kategorii (RTV, AGD, Dom):</p>
-    <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
-        <pre>SELECT kategoria, AVG(cena) AS SredniaCena 
+            <h2>2. Przykład: Średnia cena w kategoriach</h2>
+            <p>W tabeli <code>Produkty</code> możemy sprawdzić średnią cenę dla każdej kategorii (RTV, AGD, Dom):</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
+                <pre>SELECT kategoria, AVG(cena) AS SredniaCena 
 FROM Produkty 
 GROUP BY kategoria;</pre>
-    </div>
+            </div>
 
-    <div class="task-box" style="border-left-color: #e67e22;">
-        <strong>Złota zasada GROUP BY:</strong>
-        <p>Każda kolumna, która pojawia się w <code>SELECT</code>, a <strong>nie jest</strong> częścią funkcji agregującej (jak COUNT czy SUM), <strong>musi</strong> znaleźć się w <code>GROUP BY</code>. W przeciwnym razie Access wyświetli błąd!</p>
-    </div>
+            <div class="task-box" style="border-left-color: #e67e22;">
+                <strong>Złota zasada GROUP BY:</strong>
+                <p>Każda kolumna, która pojawia się w <code>SELECT</code>, a <strong>nie jest</strong> częścią funkcji agregującej (jak COUNT czy SUM), <strong>musi</strong> znaleźć się w <code>GROUP BY</code>. W przeciwnym razie Access wyświetli błąd!</p>
+            </div>
 
-    
-
-    <h2>3. Grupowanie z sortowaniem</h2>
-    <p>Możesz połączyć grupowanie z sortowaniem, aby zobaczyć np. klasy z największą liczbą uczniów na górze:</p>
-    <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
-        <pre>SELECT klasa, COUNT(*) AS Liczba 
+            <h2>3. Grupowanie z sortowaniem</h2>
+            <p>Możesz połączyć grupowanie z sortowaniem, aby zobaczyć np. klasy z największą liczbą uczniów na górze:</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
+                <pre>SELECT klasa, COUNT(*) AS Liczba 
 FROM Uczniowie 
 GROUP BY klasa 
 ORDER BY COUNT(*) DESC;</pre>
-    </div>
-
-    <div class="task-box">
-        <strong>Zadanie do przemyślenia:</strong>
-        <p>Masz tabelę <code>Oceny</code> z kolumnami <code>przedmiot</code> oraz <code>ocena</code>. Jak sprawdzić, jaka jest najniższa ocena z każdego przedmiotu?</p>
-        
-        <details class="answer-details">
-            <summary>Sprawdź poprawne zapytanie</summary>
-            <div class="answer-content">
-                <p>Musimy pogrupować dane po przedmiocie i użyć funkcji <code>MIN</code>:</p>
-                <code>SELECT przedmiot, MIN(ocena) FROM Oceny GROUP BY przedmiot;</code>
             </div>
-        </details>
-    </div>
-</section>
+
+            <div class="task-box">
+                <strong>Zadanie do przemyślenia:</strong>
+                <p>Masz tabelę <code>Oceny</code> z kolumnami <code>przedmiot</code> oraz <code>ocena</code>. Jak sprawdzić, jaka jest najniższa ocena z każdego przedmiotu?</p>
+                
+                <details class="answer-details">
+                    <summary>Sprawdź poprawne zapytanie</summary>
+                    <div class="answer-content">
+                        <p>Musimy pogrupować dane po przedmiocie i użyć funkcji <code>MIN</code>:</p>
+                        <code>SELECT przedmiot, MIN(ocena) FROM Oceny GROUP BY przedmiot;</code>
+                    </div>
+                </details>
+            </div>
+        </section>
+
 		<section id="m3-l3" class="lesson-content">
-    <h1>Lekcja 3.3: Filtrowanie grup (HAVING)</h1>
-    <p>Do tej pory filtrowaliśmy pojedyncze wiersze za pomocą <code>WHERE</code>. Co jednak zrobić, gdy chcemy przefiltrować <strong>wyniki obliczeń</strong>? Na przykład wyświetlić tylko te kategorie produktów, w których średnia cena jest wyższa niż 100 zł?</p>
+            <h1>Lekcja 3.3: Filtrowanie grup (HAVING)</h1>
+            <p>Do tej pory filtrowaliśmy pojedyncze wiersze za pomocą <code>WHERE</code>. Co jednak zrobić, gdy chcemy przefiltrować <strong>wyniki obliczeń</strong>? Na przykład wyświetlić tylko te kategorie produktów, w których średnia cena jest wyższa niż 100 zł?</p>
 
-    <div class="info-box" style="border-left-color: #e74c3c;">
-        <strong>Najważniejsza różnica:</strong>
-        <ul>
-            <li><code>WHERE</code> – filtruje dane <strong>przed</strong> grupowaniem (pojedyncze rekordy).</li>
-            <li><code>HAVING</code> – filtruje dane <strong>po</strong> grupowaniu (wyniki funkcji takich jak SUM czy COUNT).</li>
-        </ul>
-    </div>
+            <div class="info-box" style="border-left-color: #e74c3c;">
+                <strong>Najważniejsza różnica:</strong>
+                <ul>
+                    <li><code>WHERE</code> – filtruje dane <strong>przed</strong> grupowaniem (pojedyncze rekordy).</li>
+                    <li><code>HAVING</code> – filtruje dane <strong>po</strong> grupowaniu (wyniki funkcji takich jak SUM czy COUNT).</li>
+                </ul>
+            </div>
 
-    
-
-    <h2>1. Przykład: Tylko liczne klasy</h2>
-    <p>Chcemy wyświetlić tylko te klasy, w których uczy się <strong>więcej niż 5 osób</strong>:</p>
-    <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
-        <pre>SELECT klasa, COUNT(*) AS Liczba 
+            <h2>1. Przykład: Tylko liczne klasy</h2>
+            <p>Chcemy wyświetlić tylko te klasy, w których uczy się <strong>więcej niż 5 osób</strong>:</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
+                <pre>SELECT klasa, COUNT(*) AS Liczba 
 FROM Uczniowie 
 GROUP BY klasa 
 HAVING COUNT(*) > 5;</pre>
-    </div>
+            </div>
 
-    <h2>2. Przykład: Wysoka średnia ocen</h2>
-    <p>Załóżmy, że interesują nas tylko przedmioty, z których średnia ocen jest <strong>wyższa niż 4.5</strong>:</p>
-    <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
-        <pre>SELECT przedmiot, AVG(ocena) AS Srednia 
+            <h2>2. Przykład: Wysoka średnia ocen</h2>
+            <p>Załóżmy, że interesują nas tylko przedmioty, z których średnia ocen jest <strong>wyższa niż 4.5</strong>:</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
+                <pre>SELECT przedmiot, AVG(ocena) AS Srednia 
 FROM Oceny 
 GROUP BY przedmiot 
 HAVING AVG(ocena) > 4.5;</pre>
-    </div>
-
-    
-
-    <div class="task-box" style="background-color: #fdf2f2;">
-        <strong>Kolejność w zapytaniu (Bardzo ważne!):</strong>
-        <p>W SQL nie można zamieniać kolejności klauzul. Poprawny schemat to:</p>
-        <ol>
-            <li><code>SELECT</code> (co wybierasz)</li>
-            <li><code>FROM</code> (z jakiej tabeli)</li>
-            <li><code>WHERE</code> (warunek dla wierszy)</li>
-            <li><code>GROUP BY</code> (grupowanie)</li>
-            <li><code>HAVING</code> (warunek dla grup)</li>
-            <li><code>ORDER BY</code> (sortowanie końcowe)</li>
-        </ol>
-    </div>
-
-    <div class="task-box">
-        <strong>Zadanie kontrolne:</strong>
-        <p>Napisz zapytanie, które wyświetli nazwy kategorii produktów, ale tylko takich, których <strong>suma wartości w magazynie (SUM)</strong> przekracza 10 000 zł.</p>
-        
-        <details class="answer-details">
-            <summary>Kliknij, aby zobaczyć rozwiązanie</summary>
-            <div class="answer-content">
-                <code>SELECT kategoria, SUM(wartosc) FROM Produkty GROUP BY kategoria HAVING SUM(wartosc) > 10000;</code>
             </div>
-        </details>
-    </div>
-</section>
+
+            <div class="task-box" style="background-color: #fdf2f2;">
+                <strong>Kolejność w zapytaniu (Bardzo ważne!):</strong>
+                <p>W SQL nie można zamieniać kolejności klauzul. Poprawny schemat to:</p>
+                <ol>
+                    <li><code>SELECT</code> (co wybierasz)</li>
+                    <li><code>FROM</code> (z jakiej tabeli)</li>
+                    <li><code>WHERE</code> (warunek dla wierszy)</li>
+                    <li><code>GROUP BY</code> (grupowanie)</li>
+                    <li><code>HAVING</code> (warunek dla grup)</li>
+                    <li><code>ORDER BY</code> (sortowanie końcowe)</li>
+                </ol>
+            </div>
+
+            <div class="task-box">
+                <strong>Zadanie kontrolne:</strong>
+                <p>Napisz zapytanie, które wyświetli nazwy kategorii produktów, ale tylko takich, których <strong>suma wartości w magazynie (SUM)</strong> przekracza 10 000 zł.</p>
+                
+                <details class="answer-details">
+                    <summary>Kliknij, aby zobaczyć rozwiązanie</summary>
+                    <div class="answer-content">
+                        <code>SELECT kategoria, SUM(wartosc) FROM Produkty GROUP BY kategoria HAVING SUM(wartosc) > 10000;</code>
+                    </div>
+                </details>
+            </div>
+        </section>
+
 		<section id="m4-l1" class="lesson-content">
-    <h1>4.1. Idea relacji i klucze (PK, FK)</h1>
-    <p>W profesjonalnych bazach danych nie trzymamy wszystkiego w jednej, ogromnej tabeli. Powodowałoby to ogromny bałagan i powtarzanie tych samych informacji (np. danych o wydawcy przy każdej książce).</p>
+            <h1>4.1. Idea relacji i klucze (PK, FK)</h1>
+            <p>W profesjonalnych bazach danych nie trzymamy wszystkiego w jednej, ogromnej tabeli. Powodowałoby to ogromny bałagan i powtarzanie tych samych informacji (np. danych o wydawcy przy każdej książce).</p>
 
-    <div class="info-box">
-        <strong>Dlaczego dzielimy dane?</strong>
-        <ul>
-            <li><strong>Oszczędność miejsca:</strong> Nazwę klasy zapisujemy raz w tabeli <code>Klasy</code>, a nie 30 razy przy każdym uczniu.</li>
-            <li><strong>Łatwa aktualizacja:</strong> Jeśli klasa zmieni wychowawcę, poprawiamy to w jednym miejscu.</li>
-            <li><strong>Porządek:</strong> Każda tabela odpowiada za konkretny typ informacji (Uczniowie, Oceny, Przedmioty).</li>
-        </ul>
-    </div>
+            <div class="info-box">
+                <strong>Dlaczego dzielimy dane?</strong>
+                <ul>
+                    <li><strong>Oszczędność miejsca:</strong> Nazwę klasy zapisujemy raz w tabeli <code>Klasy</code>, a nie 30 razy przy każdym uczniu.</li>
+                    <li><strong>Łatwa aktualizacja:</strong> Jeśli klasa zmieni wychowawcę, poprawiamy to w jednym miejscu.</li>
+                    <li><strong>Porządek:</strong> Każda tabela odpowiada za konkretny typ informacji (Uczniowie, Oceny, Przedmioty).</li>
+                </ul>
+            </div>
 
-    
-
-    <h2>1. Klucz Podstawowy (Primary Key - PK)</h2>
-    <p>To unikalny identyfikator każdego rekordu w tabeli. Nie może się powtarzać i nie może być pusty. Najczęściej jest to pole <code>ID</code>.</p>
-    <div class="code-container">
-        <pre>-- Przykład w tabeli Autorzy
+            <h2>1. Klucz Podstawowy (Primary Key - PK)</h2>
+            <p>To unikalny identyfikator każdego rekordu w tabeli. Nie może się powtarzać i nie może być pusty. Najczęściej jest to pole <code>ID</code>.</p>
+            <div class="code-container">
+                <pre>-- Przykład w tabeli Autorzy
 ID_Autora | Imie | Nazwisko
 ---------------------------
 1         | Adam | Mickiewicz  <-- 1 to Klucz Podstawowy</pre>
-    </div>
-
-    <h2>2. Klucz Obcy (Foreign Key - FK)</h2>
-    <p>To "pomost" do innej tabeli. Jest to kolumna w jednej tabeli, która przechowuje wartość klucza podstawowego z innej tabeli.</p>
-
-    
-
-    <h3>Przykład praktyczny:</h3>
-    <p>Mamy tabelę <code>Klasy</code> (PK to ID_klasy) oraz tabelę <code>Uczniowie</code>. Aby przypisać ucznia do klasy, w tabeli uczniów tworzymy klucz obcy:</p>
-    
-    <div class="code-container" style="background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 8px;">
-        <strong>Tabela Klasy:</strong><br>
-        ID_klasy: 1 | Nazwa: 2B<br><br>
-        <strong>Tabela Uczniowie:</strong><br>
-        ID_ucznia: 105 | Nazwisko: Kowalski | <b>ID_klasy: 1</b> (FK)
-    </div>
-
-    <div class="task-box" style="border-left-color: #3498db;">
-        <strong>Rodzaje relacji:</strong>
-        <ul>
-            <li><strong>Jeden-do-wielu (1:N):</strong> Najczęstsza. Jeden autor może napisać wiele książek, ale książka ma (zazwyczaj) jednego autora.</li>
-            <li><strong>Wiele-do-wielu (M:N):</strong> Jeden uczeń ma wielu nauczycieli, a jeden nauczyciel ma wielu uczniów. (Wymaga tabeli pośredniej!).</li>
-            <li><strong>Jeden-do-jeden (1:1):</strong> Rzadka. Np. jeden obywatel ma jeden numer PESEL.</li>
-        </ul>
-    </div>
-
-    <div class="task-box">
-        <strong>Pytanie kontrolne:</strong>
-        <p>Które pole w tabeli <code>Oceny</code> prawdopodobnie jest Kluczem Obcym (FK), który pozwala sprawdzić, kto dostał daną ocenę?</p>
-        
-        <details class="answer-details">
-            <summary>Sprawdź odpowiedź</summary>
-            <div class="answer-content">
-                <p>Jest to pole <code>ID_ucznia</code> (lub <code>nr_legitymacji</code>), które odsyła nas do tabeli <code>Uczniowie</code>.</p>
             </div>
-        </details>
-    </div>
-</section>
+
+            <h2>2. Klucz Obcy (Foreign Key - FK)</h2>
+            <p>To "pomost" do innej tabeli. Jest to kolumna w jednej tabeli, która przechowuje wartość klucza podstawowego z innej tabeli.</p>
+
+            <h3>Przykład praktyczny:</h3>
+            <p>Mamy tabelę <code>Klasy</code> (PK to ID_klasy) oraz tabelę <code>Uczniowie</code>. Aby przypisać ucznia do klasy, w tabeli uczniów tworzymy klucz obcy:</p>
+            
+            <div class="code-container" style="background: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 8px;">
+                <strong>Tabela Klasy:</strong><br>
+                ID_klasy: 1 | Nazwa: 2B<br><br>
+                <strong>Tabela Uczniowie:</strong><br>
+                ID_ucznia: 105 | Nazwisko: Kowalski | <b>ID_klasy: 1</b> (FK)
+            </div>
+
+            <div class="task-box" style="border-left-color: #3498db;">
+                <strong>Rodzaje relacji:</strong>
+                <ul>
+                    <li><strong>Jeden-do-wielu (1:N):</strong> Najczęstsza. Jeden autor może napisać wiele książek, ale książka ma (zazwyczaj) jednego autora.</li>
+                    <li><strong>Wiele-do-wielu (M:N):</strong> Jeden uczeń ma wielu nauczycieli, a jeden nauczyciel ma wielu uczniów. (Wymaga tabeli pośredniej!).</li>
+                    <li><strong>Jeden-do-jeden (1:1):</strong> Rzadka. Np. jeden obywatel ma jeden numer PESEL.</li>
+                </ul>
+            </div>
+
+            <div class="task-box">
+                <strong>Pytanie kontrolne:</strong>
+                <p>Które pole w tabeli <code>Oceny</code> prawdopodobnie jest Kluczem Obcym (FK), który pozwala sprawdzić, kto dostał daną ocenę?</p>
+                
+                <details class="answer-details">
+                    <summary>Sprawdź odpowiedź</summary>
+                    <div class="answer-content">
+                        <p>Jest to pole <code>ID_ucznia</code> (lub <code>nr_legitymacji</code>), które odsyła nas do tabeli <code>Uczniowie</code>.</p>
+                    </div>
+                </details>
+            </div>
+        </section>
+
 		<section id="m4-l2" class="lesson-content">
-    <h1>4.2. Łączenie wewnętrzne (INNER JOIN)</h1>
-    <p>Skoro wiemy już, że dane są dzielone na tabele (np. <code>Uczniowie</code> i <code>Klasy</code>), musimy nauczymy się je "sklejać", aby wyświetlić pełną informację: imię ucznia obok pełnej nazwy jego klasy.</p>
+            <h1>4.2. Łączenie wewnętrzne (INNER JOIN)</h1>
+            <p>Skoro wiemy już, że dane są dzielone na tabele (np. <code>Uczniowie</code> i <code>Klasy</code>), musimy nauczymy się je "sklejać", aby wyświetlić pełną informację: imię ucznia obok pełnej nazwy jego klasy.</p>
 
-    <div class="info-box">
-        <strong>Co robi INNER JOIN?</strong>
-        <p>Szuka wspólnych wartości w obu tabelach (zazwyczaj Klucza Podstawowego w jednej i Klucza Obcego w drugiej). Jeśli znajdzie dopasowanie – łączy wiersze w jeden długi rekord. Jeśli nie znajdzie – pomija dany wiersz.</p>
-    </div>
+            <div class="info-box">
+                <strong>Co robi INNER JOIN?</strong>
+                <p>Szuka wspólnych wartości w obu tabelach (zazwyczaj Klucza Podstawowego w jednej i Klucza Obcego w drugiej). Jeśli znajdzie dopasowanie – łączy wiersze w jeden długi rekord. Jeśli nie znajdzie – pomija dany wiersz.</p>
+            </div>
 
-    
-
-    <h2>1. Składnia zapytania</h2>
-    <p>Podstawowy schemat łączenia dwóch tabel wygląda tak:</p>
-    <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
-        <pre>SELECT Tabela1.kolumna, Tabela2.kolumna
+            <h2>1. Składnia zapytania</h2>
+            <p>Podstawowy schemat łączenia dwóch tabel wygląda tak:</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
+                <pre>SELECT Tabela1.kolumna, Tabela2.kolumna
 FROM Tabela1
 INNER JOIN Tabela2 ON Tabela1.Klucz_PK = Tabela2.Klucz_FK;</pre>
-    </div>
+            </div>
 
-    <h2>2. Przykład: Uczniowie i ich Klasy</h2>
-    <p>Chcemy wyświetlić Nazwisko ucznia oraz Nazwę klasy, do której uczęszcza:</p>
-    <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
-        <pre>SELECT Uczniowie.Nazwisko, Klasy.Nazwa_Klasy
+            <h2>2. Przykład: Uczniowie i ich Klasy</h2>
+            <p>Chcemy wyświetlić Nazwisko ucznia oraz Nazwę klasy, do której uczęszcza:</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
+                <pre>SELECT Uczniowie.Nazwisko, Klasy.Nazwa_Klasy
 FROM Uczniowie
 INNER JOIN Klasy ON Uczniowie.ID_klasy = Klasy.ID_klasy;</pre>
-    </div>
+            </div>
 
-    
-
-    <h2>3. Dobra praktyka: Aliasy tabel</h2>
-    <p>Pisanie pełnych nazw tabel (np. <code>Uczniowie.Nazwisko</code>) bywa męczące. Możemy nadać tabelom krótkie ksywki (aliasy):</p>
-    <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
-        <pre>SELECT u.Nazwisko, k.Nazwa_Klasy
+            <h2>3. Dobra praktyka: Aliasy tabel</h2>
+            <p>Pisanie pełnych nazw tabel (np. <code>Uczniowie.Nazwisko</code>) bywa męczące. Możemy nadać tabelom krótkie ksywki (aliasy):</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
+                <pre>SELECT u.Nazwisko, k.Nazwa_Klasy
 FROM Uczniowie AS u
 INNER JOIN Klasy AS k ON u.ID_klasy = k.ID_klasy;</pre>
-    </div>
-
-    <div class="task-box" style="border-left-color: #f1c40f;">
-        <strong>Na co uważać w Accessie?</strong>
-        <p>Jeśli łączysz tabele w widoku SQL MS Access, pamiętaj, że Access bardzo lubi nawiasy przy łączeniach, ale przy prostym <code>INNER JOIN</code> dwóch tabel nie są one wymagane. Problem zacznie się przy trzech tabelach (o czym w następnej lekcji!).</p>
-    </div>
-
-    <div class="task-box">
-        <strong>Zadanie do samodzielnego wykonania:</strong>
-        <p>Masz tabelę <code>Ksiazki</code> (z polem <code>ID_autora</code>) oraz tabelę <code>Autorzy</code> (z polem <code>ID_autora</code>). Napisz zapytanie, które wyświetli Tytuł książki oraz Nazwisko jej autora.</p>
-        
-        <details class="answer-details">
-            <summary>Pokaż poprawne zapytanie</summary>
-            <div class="answer-content">
-                <code>SELECT Ksiazki.Tytul, Autorzy.Nazwisko<br>
-                FROM Ksiazki<br>
-                INNER JOIN Autorzy ON Ksiazki.ID_autora = Autorzy.ID_autora;</code>
             </div>
-        </details>
-    </div>
-</section>
+
+            <div class="task-box" style="border-left-color: #f1c40f;">
+                <strong>Na co uważać w Accessie?</strong>
+                <p>Jeśli łączysz tabele w widoku SQL MS Access, pamiętaj, że Access bardzo lubi nawiasy przy łączeniach, ale przy prostym <code>INNER JOIN</code> dwóch tabel nie są one wymagane. Problem zacznie się przy trzech tabelach (o czym w następnej lekcji!).</p>
+            </div>
+
+            <div class="task-box">
+                <strong>Zadanie do samodzielnego wykonania:</strong>
+                <p>Masz tabelę <code>Ksiazki</code> (z polem <code>ID_autora</code>) oraz tabelę <code>Autorzy</code> (z polem <code>ID_autora</code>). Napisz zapytanie, które wyświetli Tytuł książki oraz Nazwisko jej autora.</p>
+                
+                <details class="answer-details">
+                    <summary>Pokaż poprawne zapytanie</summary>
+                    <div class="answer-content">
+                        <code>SELECT Ksiazki.Tytul, Autorzy.Nazwisko<br>
+                        FROM Ksiazki<br>
+                        INNER JOIN Autorzy ON Ksiazki.ID_autora = Autorzy.ID_autora;</code>
+                    </div>
+                </details>
+            </div>
+        </section>
+
 		<section id="m4-l3" class="lesson-content">
-    <h1>4.3. Łączenie wielu tabel (3+)</h1>
-    <p>Często jedno połączenie to za mało. Aby wyświetlić nazwisko ucznia, nazwę przedmiotu i wystawioną mu ocenę, musimy "skleić" ze sobą aż trzy tabele: <code>Uczniowie</code>, <code>Oceny</code> oraz <code>Przedmioty</code>.</p>
+            <h1>4.3. Łączenie wielu tabel (3+)</h1>
+            <p>Często jedno połączenie to za mało. Aby wyświetlić nazwisko ucznia, nazwę przedmiotu i wystawioną mu ocenę, musimy "skleić" ze sobą aż trzy tabele: <code>Uczniowie</code>, <code>Oceny</code> oraz <code>Przedmioty</code>.</p>
 
-    <div class="info-box" style="border-left-color: #e67e22; background-color: #fffaf0;">
-        <strong>⚠️ Pułapka MS Access (Nawiasy):</strong>
-        <p>W przeciwieństwie do MySQL czy PostgreSQL, MS Access wymaga, aby każde kolejne łączenie (JOIN) było zamknięte w nawiasach. Jeśli łączysz 3 tabele, pierwsze łączenie musi być w nawiasie!</p>
-    </div>
+            <div class="info-box" style="border-left-color: #e67e22; background-color: #fffaf0;">
+                <strong>⚠️ Pułapka MS Access (Nawiasy):</strong>
+                <p>W przeciwieństwie do MySQL czy PostgreSQL, MS Access wymaga, aby każde kolejne łączenie (JOIN) było zamknięte w nawiasach. Jeśli łączysz 3 tabele, pierwsze łączenie musi być w nawiasie!</p>
+            </div>
 
-    
-
-    <h2>1. Schemat łączenia 3 tabel</h2>
-    <p>Zauważ, gdzie znajdują się nawiasy – obejmują one całe pierwsze połączenie <code>INNER JOIN</code>:</p>
-    <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
-        <pre>SELECT kolumny
+            <h2>1. Schemat łączenia 3 tabel</h2>
+            <p>Zauważ, gdzie znajdują się nawiasy – obejmują one całe pierwsze połączenie <code>INNER JOIN</code>:</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
+                <pre>SELECT kolumny
 FROM (Tabela1 
 INNER JOIN Tabela2 ON Tabela1.PK = Tabela2.FK)
 INNER JOIN Tabela3 ON Tabela2.PK = Tabela3.FK;</pre>
-    </div>
+            </div>
 
-    <h2>2. Przykład praktyczny: Uczeń i jego oceny z przedmiotów</h2>
-    <p>Chcemy zobaczyć: Nazwisko, Nazwę Przedmiotu oraz Wartość Oceny. Łączymy tabelę <code>Uczniowie</code> z <code>Oceny</code>, a następnie <code>Oceny</code> z <code>Przedmioty</code>:</p>
-    
-    <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
-        <pre>SELECT u.Nazwisko, p.Nazwa_Przedmiotu, o.Ocena
+            <h2>2. Przykład praktyczny: Uczeń i jego oceny z przedmiotów</h2>
+            <p>Chcemy zobaczyć: Nazwisko, Nazwę Przedmiotu oraz Wartość Oceny. Łączymy tabelę <code>Uczniowie</code> z <code>Oceny</code>, a następnie <code>Oceny</code> z <code>Przedmioty</code>:</p>
+            
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
+                <pre>SELECT u.Nazwisko, p.Nazwa_Przedmiotu, o.Ocena
 FROM (Uczniowie AS u 
 INNER JOIN Oceny AS o ON u.ID_ucznia = o.ID_ucznia)
 INNER JOIN Przedmioty AS p ON o.ID_przedmiotu = p.ID_przedmiotu;</pre>
-    </div>
-
-    
-
-    <h2>3. Jak to zrozumieć "na chłopski rozum"?</h2>
-    <ol>
-        <li>Najpierw SQL łączy <strong>Ucznia</strong> z jego <strong>Ocenami</strong> (mamy listę: Kowalski - 5, Kowalski - 4).</li>
-        <li>Następnie do każdej tej oceny "dokleja" <strong>Nazwę Przedmiotu</strong> na podstawie ID_przedmiotu zapisanego przy ocenie.</li>
-    </ol>
-
-    <div class="task-box" style="background-color: #f0f7fb;">
-        <strong>Wskazówka egzaminacyjna:</strong>
-        <p>Jeśli musisz połączyć 4 tabele, dodajesz kolejny nawias na samym początku i kolejny <code>INNER JOIN</code> na końcu. Zawsze o jeden nawias mniej niż liczba tabel!</p>
-    </div>
-
-    <div class="task-box">
-        <strong>Zadanie "Gwiazdka":</strong>
-        <p>Spróbuj napisać zapytanie łączące 3 tabele: <code>Autorzy</code>, <code>Ksiazki</code> oraz <code>Wydawnictwa</code>, aby wyświetlić Nazwisko autora, Tytuł książki i Nazwę wydawnictwa.</p>
-        
-        <details class="answer-details">
-            <summary>Pokaż rozwiązanie</summary>
-            <div class="answer-content">
-                <code>SELECT a.Nazwisko, k.Tytul, w.Nazwa_Wydawcy<br>
-                FROM (Autorzy AS a <br>
-                INNER JOIN Ksiazki AS k ON a.ID_autora = k.ID_autora)<br>
-                INNER JOIN Wydawnictwa AS w ON k.ID_wydawcy = w.ID_wydawcy;</code>
             </div>
-        </details>
-    </div>
-</section>
 
-<section id="m5-l1" class="lesson-content">
-    <h1>5.1. Operacje na zbiorach (UNION)</h1>
-    <p>Do tej pory używaliśmy <code>JOIN</code>, aby łączyć tabele "w poziomie" (doklejając kolumny). Operator <code>UNION</code> pozwala na łączenie tabel "w pionie" – czyli doklejanie wierszy z jednego zapytania do drugiego.</p>
+            <h2>3. Jak to zrozumieć "na chłopski rozum"?</h2>
+            <ol>
+                <li>Najpierw SQL łączy <strong>Ucznia</strong> z jego <strong>Ocenami</strong> (mamy listę: Kowalski - 5, Kowalski - 4).</li>
+                <li>Następnie do każdej tej oceny "dokleja" <strong>Nazwę Przedmiotu</strong> na podstawie ID_przedmiotu zapisanego przy ocenie.</li>
+            </ol>
 
-    <div class="info-box" style="border-left-color: #8e44ad;">
-        <strong>Kiedy używamy UNION?</strong>
-        <p>Gdy chcemy stworzyć jedną wspólną listę z dwóch różnych tabel, np. listę wszystkich osób w szkole (zarówno uczniów, jak i nauczycieli) w jednej kolumnie.</p>
-    </div>
+            <div class="task-box" style="background-color: #f0f7fb;">
+                <strong>Wskazówka egzaminacyjna:</strong>
+                <p>Jeśli musisz połączyć 4 tabele, dodajesz kolejny nawias na samym początku i kolejny <code>INNER JOIN</code> na końcu. Zawsze o jeden nawias mniej niż liczba tabel!</p>
+            </div>
 
-    
+            <div class="task-box">
+                <strong>Zadanie "Gwiazdka":</strong>
+                <p>Spróbuj napisać zapytanie łączące 3 tabele: <code>Autorzy</code>, <code>Ksiazki</code> oraz <code>Wydawnictwa</code>, aby wyświetlić Nazwisko autora, Tytuł książki i Nazwę wydawnictwa.</p>
+                
+                <details class="answer-details">
+                    <summary>Pokaż rozwiązanie</summary>
+                    <div class="answer-content">
+                        <code>SELECT a.Nazwisko, k.Tytul, w.Nazwa_Wydawcy<br>
+                        FROM (Autorzy AS a <br>
+                        INNER JOIN Ksiazki AS k ON a.ID_autora = k.ID_autora)<br>
+                        INNER JOIN Wydawnictwa AS w ON k.ID_wydawcy = w.ID_wydawcy;</code>
+                    </div>
+                </details>
+            </div>
+        </section>
 
-    <h2>1. Zasady bezpiecznego łączenia</h2>
-    <p>Aby operator <code>UNION</code> zadziałał, musisz spełnić trzy warunki:</p>
-    <ul>
-        <li>Oba zapytania <code>SELECT</code> muszą mieć <strong>tę samą liczbę kolumn</strong>.</li>
-        <li>Kolumny na tych samych pozycjach muszą mieć <strong>podobne typy danych</strong> (np. tekst z tekstem, liczba z liczbą).</li>
-        <li>Nazwy kolumn w wyniku końcowym zostaną przejęte z <strong>pierwszego</strong> zapytania.</li>
-    </ul>
+        <section id="m5-l1" class="lesson-content">
+            <h1>5.1. Operacje na zbiorach (UNION)</h1>
+            <p>Do tej pory używaliśmy <code>JOIN</code>, aby łączyć tabele "w poziomie" (doklejając kolumny). Operator <code>UNION</code> pozwala na łączenie tabel "w pionie" – czyli doklejanie wierszy z jednego zapytania do drugiego.</p>
 
-    <h2>2. Przykład: Wspólna lista kontaktowa</h2>
-    <p>Połączmy nazwiska z dwóch różnych tabel w jeden wynik:</p>
-    <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
-        <pre>SELECT Nazwisko, Telefon FROM Uczniowie
+            <div class="info-box" style="border-left-color: #8e44ad;">
+                <strong>Kiedy używamy UNION?</strong>
+                <p>Gdy chcemy stworzyć jedną wspólną listę z dwóch różnych tabel, np. listę wszystkich osób w szkole (zarówno uczniów, jak i nauczycieli) w jednej kolumnie.</p>
+            </div>
+
+            <h2>1. Zasady bezpiecznego łączenia</h2>
+            <p>Aby operator <code>UNION</code> zadziałał, musisz spełnić trzy warunki:</p>
+            <ul>
+                <li>Oba zapytania <code>SELECT</code> muszą mieć <strong>tę samą liczbę kolumn</strong>.</li>
+                <li>Kolumny na tych samych pozycjach muszą mieć <strong>podobne typy danych</strong> (np. tekst z tekstem, liczba z liczbą).</li>
+                <li>Nazwy kolumn w wyniku końcowym zostaną przejęte z <strong>pierwszego</strong> zapytania.</li>
+            </ul>
+
+            <h2>2. Przykład: Wspólna lista kontaktowa</h2>
+            <p>Połączmy nazwiska z dwóch różnych tabel w jeden wynik:</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
+                <pre>SELECT Nazwisko, Telefon FROM Uczniowie
 UNION
 SELECT Nazwisko, Telefon FROM Nauczyciele;</pre>
-    </div>
-
-    <h2>3. UNION vs UNION ALL</h2>
-    <p>To bardzo ważna różnica, o którą często pytają na egzaminach:</p>
-    <ul>
-        <li><strong>UNION</strong> – usuwa duplikaty. Jeśli to samo nazwisko występuje w obu tabelach, w wyniku pojawi się tylko raz.</li>
-        <li><strong>UNION ALL</strong> – wyświetla wszystko, nawet powtórki. Jest znacznie szybszy, bo baza nie musi tracić czasu na szukanie duplikatów.</li>
-    </ul>
-
-    
-
-    <div class="task-box" style="background-color: #f4ecf7; border-left-color: #9b59b6;">
-        <strong>Wskazówka:</strong>
-        <p>Jeśli chcesz posortować wynik całego połączenia, klauzulę <code>ORDER BY</code> dopisz <strong>tylko raz</strong>, na samym końcu (po ostatnim SELECT).</p>
-    </div>
-
-    <div class="task-box">
-        <strong>Zadanie "Wielka Lista":</strong>
-        <p>Masz tabelę <code>Klienci_Polska</code> oraz <code>Klienci_Zagranica</code>. Napisz zapytanie, które wyświetli jedną listę wszystkich miast, w których masz klientów (bez duplikatów).</p>
-        
-        <details class="answer-details">
-            <summary>Pokaż rozwiązanie</summary>
-            <div class="answer-content">
-                <p>Używamy zwykłego <code>UNION</code>, aby pozbyć się powtarzających się nazw miast:</p>
-                <code>SELECT Miasto FROM Klienci_Polska<br>
-                UNION<br>
-                SELECT Miasto FROM Klienci_Zagranica;</code>
             </div>
-        </details>
-    </div>
-</section>
 
-<section id="m5-l2" class="lesson-content">
-    <h1>5.2. Podzapytania (Subqueries)</h1>
-    <p>Podzapytanie to instrukcja <code>SELECT</code> umieszczona wewnątrz innego zapytania. Wynik "wewnętrznego" zapytania jest przekazywany do "zewnętrznego" jako gotowa wartość do porównania.</p>
+            <h2>3. UNION vs UNION ALL</h2>
+            <p>To bardzo ważna różnica, o którą często pytają na egzaminach:</p>
+            <ul>
+                <li><strong>UNION</strong> – usuwa duplikaty. Jeśli to samo nazwisko występuje w obu tabelach, w wyniku pojawi się tylko raz.</li>
+                <li><strong>UNION ALL</strong> – wyświetla wszystko, nawet powtórki. Jest znacznie szybszy, bo baza nie musi tracić czasu na szukanie duplikatów.</li>
+            </ul>
 
-    <div class="info-box" style="border-left-color: #27ae60; background-color: #f1fcf4;">
-        <strong>Kiedy używamy podzapytań?</strong>
-        <p>Gdy warunek filtrowania zależy od obliczeń, których nie znamy z góry. Podzapytanie zawsze musi być zamknięte w <b>nawiasach okrągłych</b>.</p>
-    </div>
+            <div class="task-box" style="background-color: #f4ecf7; border-left-color: #9b59b6;">
+                <strong>Wskazówka:</strong>
+                <p>Jeśli chcesz posortować wynik całego połączenia, klauzulę <code>ORDER BY</code> dopisz <strong>tylko raz</strong>, na samym końcu (po ostatnim SELECT).</p>
+            </div>
 
-    
+            <div class="task-box">
+                <strong>Zadanie "Wielka Lista":</strong>
+                <p>Masz tabelę <code>Klienci_Polska</code> oraz <code>Klienci_Zagranica</code>. Napisz zapytanie, które wyświetli jedną listę wszystkich miast, w których masz klientów (bez duplikatów).</p>
+                
+                <details class="answer-details">
+                    <summary>Pokaż rozwiązanie</summary>
+                    <div class="answer-content">
+                        <p>Używamy zwykłego <code>UNION</code>, aby pozbyć się powtarzających się nazw miast:</p>
+                        <code>SELECT Miasto FROM Klienci_Polska<br>
+                        UNION<br>
+                        SELECT Miasto FROM Klienci_Zagranica;</code>
+                    </div>
+                </details>
+            </div>
+        </section>
 
-    <h2>1. Podzapytanie zwracające jedną wartość</h2>
-    <p>Chcemy wyświetlić produkty, których cena jest wyższa niż średnia cena wszystkich produktów w sklepie:</p>
-    <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
-        <pre>SELECT Nazwa_Produktu, Cena
+        <section id="m5-l2" class="lesson-content">
+            <h1>5.2. Podzapytania (Subqueries)</h1>
+            <p>Podzapytanie to instrukcja <code>SELECT</code> umieszczona wewnątrz innego zapytania. Wynik "wewnętrznego" zapytania jest przekazywany do "zewnętrznego" jako gotowa wartość do porównania.</p>
+
+            <div class="info-box" style="border-left-color: #27ae60; background-color: #f1fcf4;">
+                <strong>Kiedy używamy podzapytań?</strong>
+                <p>Gdy warunek filtrowania zależy od obliczeń, których nie znamy z góry. Podzapytanie zawsze musi być zamknięte w <b>nawiasach okrągłych</b>.</p>
+            </div>
+
+            <h2>1. Podzapytanie zwracające jedną wartość</h2>
+            <p>Chcemy wyświetlić produkty, których cena jest wyższa niż średnia cena wszystkich produktów w sklepie:</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
+                <pre>SELECT Nazwa_Produktu, Cena
 FROM Produkty
 WHERE Cena > (SELECT AVG(Cena) FROM Produkty);</pre>
-    </div>
+            </div>
 
-    
-
-    <h2>2. Podzapytanie z operatorem IN</h2>
-    <p>Możemy też użyć podzapytania, które zwraca listę wartości. Na przykład: wyświetl uczniów, którzy dostali przynajmniej jedną ocenę '6':</p>
-    <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
-        <pre>SELECT Nazwisko, Imie
+            <h2>2. Podzapytanie z operatorem IN</h2>
+            <p>Możemy też użyć podzapytania, które zwraca listę wartości. Na przykład: wyświetl uczniów, którzy dostali przynajmniej jedną ocenę '6':</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
+                <pre>SELECT Nazwisko, Imie
 FROM Uczniowie
 WHERE ID_ucznia IN (SELECT ID_ucznia FROM Oceny WHERE Ocena = 6);</pre>
-    </div>
-
-    <h2>3. Gdzie jeszcze można wstawić podzapytanie?</h2>
-    <ul>
-        <li><strong>W klauzuli SELECT:</strong> Aby wyświetlić dodatkową kolumnę z obliczeniem obok każdego wiersza.</li>
-        <li><strong>W klauzuli FROM:</strong> Traktując wynik podzapytania jako tymczasową tabelę.</li>
-    </ul>
-
-    <div class="task-box" style="border-left-color: #e74c3c;">
-        <strong>Ważna uwaga o wydajności:</strong>
-        <p>Podzapytania są potężne, ale mogą spowalniać bazę, jeśli są bardzo złożone. Często ten sam wynik można osiągnąć za pomocą <code>INNER JOIN</code>, który zazwyczaj działa szybciej.</p>
-    </div>
-
-    <div class="task-box">
-        <strong>Zadanie "Ponadprzeciętni":</strong>
-        <p>Napisz zapytanie, które wyświetli nazwiska uczniów, których <b>wiek</b> jest mniejszy niż średni wiek wszystkich osób w tabeli <code>Uczniowie</code>.</p>
-        
-        <details class="answer-details">
-            <summary>Pokaż rozwiązanie</summary>
-            <div class="answer-content">
-                <code>SELECT Nazwisko FROM Uczniowie<br>
-                WHERE Wiek < (SELECT AVG(Wiek) FROM Uczniowie);</code>
             </div>
-        </details>
-    </div>
-</section>
 
-<section id="m5-l3" class="lesson-content">
-    <h1>5.3. Zaawansowane narzędzia Access – Parametry i Crosstab</h1>
-    <p>MS Access to nie tylko silnik bazy danych, ale całe środowisko raportowe. W tej lekcji nauczysz się, jak sprawić, by Twoje zapytania były interaktywne oraz jak tworzyć tabele przestawne bezpośrednio w SQL.</p>
+            <h2>3. Gdzie jeszcze można wstawić podzapytanie?</h2>
+            <ul>
+                <li><strong>W klauzuli SELECT:</strong> Aby wyświetlić dodatkową kolumnę z obliczeniem obok każdego wiersza.</li>
+                <li><strong>W klauzuli FROM:</strong> Traktując wynik podzapytania jako tymczasową tabelę.</li>
+            </ul>
 
-    ---
+            <div class="task-box" style="border-left-color: #e74c3c;">
+                <strong>Ważna uwaga o wydajności:</strong>
+                <p>Podzapytania są potężne, ale mogą spowalniać bazę, jeśli są bardzo złożone. Często ten sam wynik można osiągnąć za pomocą <code>INNER JOIN</code>, który zazwyczaj działa szybciej.</p>
+            </div>
 
-    <h2>1. Zapytania Parametryczne – Interakcja z użytkownikiem</h2>
-    <p>Zamiast tworzyć 10 oddzielnych zapytań dla każdej klasy (2A, 2B, 3A...), tworzysz jedno, które <strong>przy każdym uruchomieniu</strong> prosi o podanie wartości.</p>
+            <div class="task-box">
+                <strong>Zadanie "Ponadprzeciętni":</strong>
+                <p>Napisz zapytanie, które wyświetli nazwiska uczniów, których <b>wiek</b> jest mniejszy niż średni wiek wszystkich osób w tabeli <code>Uczniowie</code>.</p>
+                
+                <details class="answer-details">
+                    <summary>Pokaż rozwiązanie</summary>
+                    <div class="answer-content">
+                        <code>SELECT Nazwisko FROM Uczniowie<br>
+                        WHERE Wiek &lt; (SELECT AVG(Wiek) FROM Uczniowie);</code>
+                    </div>
+                </details>
+            </div>
+        </section>
 
-    <div class="info-box">
-        <strong>Mechanika działania:</strong>
-        <p>Access szuka w kodzie SQL nazw w nawiasach kwadratowych <code>[...]</code>. Jeśli tekst wewnątrz nie pasuje do żadnej nazwy kolumny ani tabeli, program interpretuje to jako komunikat dla użytkownika i wyświetla okienko dialogowe.</p>
-    </div>
+        <section id="m5-l3" class="lesson-content">
+            <h1>5.3. Zaawansowane narzędzia Access – Parametry i Crosstab</h1>
+            <p>MS Access to nie tylko silnik bazy danych, ale całe środowisko raportowe. W tej lekcji nauczysz się, jak sprawić, by Twoje zapytania były interaktywne oraz jak tworzyć tabele przestawne bezpośrednio w SQL.</p>
 
-    <h3>Przykład: Filtrowanie zakresu dat</h3>
-    <p>Możesz poprosić o dwie wartości, aby wyświetlić sprzedaż z konkretnego okresu:</p>
-    <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
-        <pre>SELECT ID_Zamowienia, Data_Sprzedazy, Kwota
+            ---
+
+            <h2>1. Zapytania Parametryczne – Interakcja z użytkownikiem</h2>
+            <p>Zamiast tworzyć 10 oddzielnych zapytań dla każdej klasy (2A, 2B, 3A...), tworzysz jedno, które <strong>przy każdym uruchomieniu</strong> prosi o podanie wartości.</p>
+
+            <div class="info-box">
+                <strong>Mechanika działania:</strong>
+                <p>Access szuka w kodzie SQL nazw w nawiasach kwadratowych <code>[...]</code>. Jeśli tekst wewnątrz nie pasuje do żadnej nazwy kolumny ani tabeli, program interpretuje to jako komunikat dla użytkownika i wyświetla okienko dialogowe.</p>
+            </div>
+
+            <h3>Przykład: Filtrowanie zakresu dat</h3>
+            <p>Możesz poprosić o dwie wartości, aby wyświetlić sprzedaż z konkretnego okresu:</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
+                <pre>SELECT ID_Zamowienia, Data_Sprzedazy, Kwota
 FROM Zamowienia
 WHERE Data_Sprzedazy BETWEEN [Podaj datę początkową (RRRR-MM-DD):] 
                          AND [Podaj datę końcową:];</pre>
-    </div>
+            </div>
 
-    
+            <div class="task-box" style="border-left-color: #2980b9;">
+                <strong>Wskazówka:</strong> Pamiętaj, aby tekst w nawiasie był precyzyjny (np. dodaj informację o formacie daty). Dzięki temu osoba korzystająca z bazy nie popełni błędu.
+            </div>
 
-    <div class="task-box" style="border-left-color: #2980b9;">
-        <strong>Wskazówka:</strong> Pamiętaj, aby tekst w nawiasie był precyzyjny (np. dodaj informację o formacie daty). Dzięki temu osoba korzystająca z bazy nie popełni błędu.
-    </div>
+            ---
 
-    ---
+            <h2>2. Zapytania Krzyżowe (CROSSTAB) – Raporty macierzowe</h2>
+            <p>To "święty graal" raportowania w Accessie. Zapytanie krzyżowe (Crosstab) przekształca wiersze w kolumny. Jest to idealne, gdy chcesz podsumować np. oceny uczniów z wielu przedmiotów w jednej czytelnej tabeli.</p>
 
-    <h2>2. Zapytania Krzyżowe (CROSSTAB) – Raporty macierzowe</h2>
-    <p>To "święty graal" raportowania w Accessie. Zapytanie krzyżowe (Crosstab) przekształca wiersze w kolumny. Jest to idealne, gdy chcesz podsumować np. oceny uczniów z wielu przedmiotów w jednej czytelnej tabeli.</p>
+            <h3>Struktura zapytania krzyżowego:</h3>
+            <p>Zapytanie krzyżowe w Access SQL ma specyficzną budowę, która zawsze składa się z trzech części:</p>
+            <ol>
+                <li><strong>TRANSFORM:</strong> Określa, co ma być obliczone (np. <code>SUM</code>, <code>AVG</code>, <code>COUNT</code>). To są dane "na środku" tabeli.</li>
+                <li><strong>SELECT:</strong> Określa, co ma być wierszami (np. Nazwisko ucznia).</li>
+                <li><strong>PIVOT:</strong> Określa, co ma stać się nagłówkami kolumn (np. Nazwy przedmiotów).</li>
+            </ol>
 
-    <h3>Struktura zapytania krzyżowego:</h3>
-    <p>Zapytanie krzyżowe w Access SQL ma specyficzną budowę, która zawsze składa się z trzech części:</p>
-    <ol>
-        <li><strong>TRANSFORM:</strong> Określa, co ma być obliczone (np. <code>SUM</code>, <code>AVG</code>, <code>COUNT</code>). To są dane "na środku" tabeli.</li>
-        <li><strong>SELECT:</strong> Określa, co ma być wierszami (np. Nazwisko ucznia).</li>
-        <li><strong>PIVOT:</strong> Określa, co ma stać się nagłówkami kolumn (np. Nazwy przedmiotów).</li>
-    </ol>
-
-    
-
-    <h3>Przykład: Arkusz ocen (Macierz)</h3>
-    <p>Załóżmy, że mamy tabelę <code>Wyniki</code> z kolumnami: <code>Uczeń</code>, <code>Przedmiot</code>, <code>Ocena</code>.</p>
-    <div class="code-container">
-        <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
-        <pre>TRANSFORM FIRST(Ocena)
+            <h3>Przykład: Arkusz ocen (Macierz)</h3>
+            <p>Załóżmy, że mamy tabelę <code>Wyniki</code> z kolumnami: <code>Uczeń</code>, <code>Przedmiot</code>, <code>Ocena</code>.</p>
+            <div class="code-container">
+                <button class="copy-btn" onclick="copyCode(this)">Kopiuj</button>
+                <pre>TRANSFORM FIRST(Ocena)
 SELECT Uczeń
 FROM Wyniki
 GROUP BY Uczeń
 PIVOT Przedmiot;</pre>
-    </div>
-
-    <div class="info-box" style="background-color: #fef9e7; border-left-color: #f1c40f;">
-        <strong>Dlaczego FIRST?</strong> W zapytaniu krzyżowym musisz użyć funkcji agregującej. Jeśli uczeń ma tylko jedną ocenę z przedmiotu, funkcja <code>FIRST</code> (pierwsza znaleziona) po prostu ją wyświetli. Jeśli chcesz średnią, użyjesz <code>AVG</code>.
-    </div>
-
-    ---
-
-    <h2>3. Kiedy używać którego narzędzia?</h2>
-    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
-        <thead>
-            <tr style="background-color: #34495e; color: white;">
-                <th style="padding: 10px; border: 1px solid #ddd;">Narzędzie</th>
-                <th style="padding: 10px; border: 1px solid #ddd;">Zastosowanie</th>
-                <th style="padding: 10px; border: 1px solid #ddd;">Zaleta</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td style="padding: 10px; border: 1px solid #ddd;"><b>Parametry</b></td>
-                <td style="padding: 10px; border: 1px solid #ddd;">Szybkie filtrowanie "na żądanie"</td>
-                <td style="padding: 10px; border: 1px solid #ddd;">Użytkownik nie musi znać SQL</td>
-            </tr>
-            <tr>
-                <td style="padding: 10px; border: 1px solid #ddd;"><b>Crosstab</b></td>
-                <td style="padding: 10px; border: 1px solid #ddd;">Analiza porównawcza, statystyki</td>
-                <td style="padding: 10px; border: 1px solid #ddd;">Bardzo czytelny wynik (kompaktowy)</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="task-box">
-        <strong>Zadanie egzaminacyjne:</strong>
-        <p>Stwórz zapytanie krzyżowe, które wyświetli <b>sumę sprzedaży</b> (pole <code>Kwota</code>) dla każdego <b>Sprzedawcy</b> (wiersze), rozbitą na poszczególne <b>Miesiące</b> (kolumny).</p>
-        
-        <details class="answer-details">
-            <summary>Pokaż rozwiązanie</summary>
-            <div class="answer-content">
-                <code>TRANSFORM SUM(Kwota)<br>
-                SELECT Sprzedawca<br>
-                FROM Sprzedaż<br>
-                GROUP BY Sprzedawca<br>
-                PIVOT Miesiąc;</code>
             </div>
-        </details>
-    </div>
-</section>
 
+            <div class="info-box" style="background-color: #fef9e7; border-left-color: #f1c40f;">
+                <strong>Dlaczego FIRST?</strong> W zapytaniu krzyżowym musisz użyć funkcji agregującej. Jeśli uczeń ma tylko jedną ocenę z przedmiotu, funkcja <code>FIRST</code> (pierwsza znaleziona) po prostu ją wyświetli. Jeśli chcesz średnią, użyjesz <code>AVG</code>.
+            </div>
 
+            ---
+
+            <h2>3. Kiedy używać którego narzędzia?</h2>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+                <thead>
+                    <tr style="background-color: #34495e; color: white;">
+                        <th style="padding: 10px; border: 1px solid #ddd;">Narzędzie</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">Zastosowanie</th>
+                        <th style="padding: 10px; border: 1px solid #ddd;">Zaleta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #ddd;"><b>Parametry</b></td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Szybkie filtrowanie "na żądanie"</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Użytkownik nie musi znać SQL</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #ddd;"><b>Crosstab</b></td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Analiza porównawcza, statystyki</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">Bardzo czytelny wynik (kompaktowy)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="task-box">
+                <strong>Zadanie egzaminacyjne:</strong>
+                <p>Stwórz zapytanie krzyżowe, które wyświetli <b>sumę sprzedaży</b> (pole <code>Kwota</code>) dla każdego <b>Sprzedawcy</b> (wiersze), rozbitą na poszczególne <b>Miesiące</b> (kolumny).</p>
+                
+                <details class="answer-details">
+                    <summary>Pokaż rozwiązanie</summary>
+                    <div class="answer-content">
+                        <code>TRANSFORM SUM(Kwota)<br>
+                        SELECT Sprzedawca<br>
+                        FROM Sprzedaż<br>
+                        GROUP BY Sprzedawca<br>
+                        PIVOT Miesiąc;</code>
+                    </div>
+                </details>
+            </div>
+        </section>
 
 	</main>
+
 	<script>
 	function showLesson(lessonId, element) {
 		document.querySelectorAll('.lesson-content').forEach(l => l.classList.remove('active'));
@@ -1402,185 +1461,46 @@ PIVOT Przedmiot;</pre>
 			resultDiv.innerHTML += " - Spróbuj jeszcze raz, aby odblokować kolejny moduł!";
 		}
 	}
-	// Definicje schematów z wyraźną nazwą tabeli na górze
+	
 	const SCHEMA_UCZNIOWIE = "<strong style='color: #2980b9;'>TABELA: Uczniowie</strong>\n+------------+-------+----------+-------+------+----------------+\n| id_ucznia  | imie  | nazwisko | klasa | plec | data_urodzenia |\n+------------+-------+----------+-------+------+----------------+";
 	const SCHEMA_PRODUKTY = "<strong style='color: #2980b9;'>TABELA: Produkty</strong>\n+-------------+-------+-----------+------+---------------+\n| id_produktu | nazwa | kategoria | cena | ilosc_magazyn |\n+-------------+-------+-----------+------+---------------+";
 	const SCHEMA_OCENY = "<strong style='color: #2980b9;'>TABELA: Oceny</strong>\n+----------+-----------+-----------+-------+------------------+\n| id_oceny | id_ucznia | przedmiot | ocena | data_wystawienia |\n+----------+-----------+-----------+-------+------------------+";
 	const SCHEMA_KLIENCI = "<strong style='color: #2980b9;'>TABELA: Klienci</strong>\n+-----------+-------+----------+---------+--------+\n| id_klienta| imie  | nazwisko | telefon | miasto |\n+-----------+-------+----------+---------+--------+";
-	const questionPool = [
-		// --- TABELA: UCZNIOWIE ---
-		{
-			cat: 'filter',
-			q: "Wyświetl wszystkich uczniów z klasy '2B'.",
-			schema: SCHEMA_UCZNIOWIE,
-			a: ["SELECT * FROM Uczniowie WHERE klasa = '2B';"]
-		}, {
-			cat: 'filter',
-			q: "Pobierz imiona i nazwiska uczniów, którzy są kobietami (plec = 'K').",
-			schema: SCHEMA_UCZNIOWIE,
-			a: ["SELECT imie, nazwisko FROM Uczniowie WHERE plec = 'K';"]
-		}, {
-			cat: 'filter',
-			q: "Wyświetl uczniów o nazwisku 'Kowalski' lub 'Nowak'.",
-			schema: SCHEMA_UCZNIOWIE,
-			a: ["SELECT * FROM Uczniowie WHERE nazwisko IN ('Kowalski', 'Nowak');"]
-		}, {
-			cat: 'pattern',
-			q: "Znajdź uczniów, których imię zaczyna się na literę 'A' (Access).",
-			schema: SCHEMA_UCZNIOWIE,
-			a: ["SELECT * FROM Uczniowie WHERE imie LIKE 'A*';"]
-		}, {
-			cat: 'filter',
-			q: "Wyświetl uczniów, którzy NIE są z klas '1A' ani '1B'.",
-			schema: SCHEMA_UCZNIOWIE,
-			a: ["SELECT * FROM Uczniowie WHERE klasa NOT IN ('1A', '1B');"]
-		}, {
-			cat: 'sort',
-			q: "Pobierz listę uczniów posortowaną alfabetycznie według nazwiska.",
-			schema: SCHEMA_UCZNIOWIE,
-			a: ["SELECT * FROM Uczniowie ORDER BY nazwisko ASC;"]
-		}, {
-			cat: 'pattern',
-			q: "Wyświetl uczniów, których nazwisko kończy się na 'ski'.",
-			schema: SCHEMA_UCZNIOWIE,
-			a: ["SELECT * FROM Uczniowie WHERE nazwisko LIKE '*ski';"]
-		}, {
-			cat: 'date',
-			q: "Pobierz listę uczniów urodzonych w 2008 roku (użyj funkcji YEAR).",
-			schema: SCHEMA_UCZNIOWIE,
-			a: ["SELECT * FROM Uczniowie WHERE YEAR(data_urodzenia) = 2008;"]
-		}, {
-			cat: 'date',
-			q: "Wyświetl uczniów, którzy urodzili się w maju (użyj funkcji MONTH).",
-			schema: SCHEMA_UCZNIOWIE,
-			a: ["SELECT * FROM Uczniowie WHERE MONTH(data_urodzenia) = 5;"]
-		}, {
-			cat: 'date',
-			q: "Znajdź uczniów urodzonych między 1 stycznia 2009 a 31 grudnia 2009 (użyj BETWEEN).",
-			schema: SCHEMA_UCZNIOWIE,
-			a: ["SELECT * FROM Uczniowie WHERE data_urodzenia BETWEEN '2009-01-01' AND '2009-12-31';", "SELECT * FROM Uczniowie WHERE YEAR(data_urodzenia) = 2009;"]
-		},
-		// --- TABELA: PRODUKTY ---
-		{
-			cat: 'filter',
-			q: "Pobierz nazwy produktów, których cena jest mniejsza lub równa 100.",
-			schema: SCHEMA_PRODUKTY,
-			a: ["SELECT nazwa FROM Produkty WHERE cena <= 100;"]
-		}, {
-			cat: 'sort',
-			q: "Wyświetl produkty z kategorii 'RTV' posortowane od najdroższego.",
-			schema: SCHEMA_PRODUKTY,
-			a: ["SELECT * FROM Produkty WHERE kategoria = 'RTV' ORDER BY cena DESC;"]
-		}, {
-			cat: 'filter',
-			q: "Znajdź produkty, których cena mieści się w przedziale od 50 do 200 zł.",
-			schema: SCHEMA_PRODUKTY,
-			a: ["SELECT * FROM Produkty WHERE cena BETWEEN 50 AND 200;"]
-		}, {
-			cat: 'pattern',
-			q: "Pobierz produkty, których nazwa zawiera słowo 'Laptop'.",
-			schema: SCHEMA_PRODUKTY,
-			a: ["SELECT * FROM Produkty WHERE nazwa LIKE '*Laptop*';"]
-		}, {
-			cat: 'filter',
-			q: "Wyświetl produkty, których ilość w magazynie jest mniejsza niż 5.",
-			schema: SCHEMA_PRODUKTY,
-			a: ["SELECT * FROM Produkty WHERE ilosc_magazyn < 5;"]
-		}, {
-			cat: 'sort',
-			q: "Pobierz unikalne (różne) kategorie produktów.",
-			schema: SCHEMA_PRODUKTY,
-			a: ["SELECT DISTINCT kategoria FROM Produkty;"]
-		}, {
-			cat: 'filter',
-			q: "Wyświetl produkty z kategorii 'AGD' lub 'Dom'.",
-			schema: SCHEMA_PRODUKTY,
-			a: ["SELECT * FROM Produkty WHERE kategoria IN ('AGD', 'Dom');"]
-		},
-		// --- TABELA: OCENY ---
-		{
-			cat: 'filter',
-			q: "Znajdź oceny z przedmiotu 'Matematyka', które są równe 5 lub 6.",
-			schema: SCHEMA_OCENY,
-			a: ["SELECT * FROM Oceny WHERE przedmiot = 'Matematyka' AND ocena IN (5, 6);"]
-		}, {
-			cat: 'date',
-			q: "Wyświetl oceny wystawione w październiku 2023 (Access LIKE).",
-			schema: SCHEMA_OCENY,
-			a: ["SELECT * FROM Oceny WHERE data_wystawienia LIKE '2023-10*';"]
-		}, {
-			cat: 'filter',
-			q: "Pobierz oceny ucznia o id_ucznia = 10.",
-			schema: SCHEMA_OCENY,
-			a: ["SELECT * FROM Oceny WHERE id_ucznia = 10;"]
-		}, {
-			cat: 'sort',
-			q: "Wyświetl oceny z 'Informatyka' wyższe niż 3, posortowane od najwyższej.",
-			schema: SCHEMA_OCENY,
-			a: ["SELECT * FROM Oceny WHERE przedmiot = 'Informatyka' AND ocena > 3 ORDER BY ocena DESC;"]
-		}, {
-			cat: 'date',
-			q: "Znajdź oceny wystawione między '2023-09-01' a '2023-12-31'.",
-			schema: SCHEMA_OCENY,
-			a: ["SELECT * FROM Oceny WHERE data_wystawienia BETWEEN '2023-09-01' AND '2023-12-31';", "SELECT * FROM Oceny WHERE YEAR(data_wystawienia) = 2023 AND MONTH(data_wystawienia) BETWEEN 9 AND 12;", "SELECT * FROM Oceny WHERE YEAR(data_wystawienia) = 2023 AND MONTH(data_wystawienia) IN (9, 10, 11, 12);"]
-		}, {
-			cat: 'filter',
-			q: "Wyświetl wszystkie oceny niedostateczne (ocena = 1).",
-			schema: SCHEMA_OCENY,
-			a: ["SELECT * FROM Oceny WHERE ocena = 1;"]
-		}, {
-			cat: 'filter',
-			q: "Pobierz przedmioty, z których wystawiono ocenę 6.",
-			schema: SCHEMA_OCENY,
-			a: ["SELECT przedmiot FROM Oceny WHERE ocena = 6;"]
-		},
-		// --- TABELA: KLIENCI ---
-		{
-			cat: 'filter',
-			q: "Wyświetl klientów z miasta 'Warszawa' lub 'Kraków'.",
-			schema: SCHEMA_KLIENCI,
-			a: ["SELECT * FROM Klienci WHERE miasto IN ('Warszawa', 'Kraków');"]
-		}, {
-			cat: 'pattern',
-			q: "Znajdź klientów, których telefon zaczyna się od '605'.",
-			schema: SCHEMA_KLIENCI,
-			a: ["SELECT * FROM Klienci WHERE telefon LIKE '605*';"]
-		}, {
-			cat: 'filter',
-			q: "Pobierz imiona i nazwiska klientów, którzy nie mieszkają w 'Gdańsku'.",
-			schema: SCHEMA_KLIENCI,
-			a: ["SELECT imie, nazwisko FROM Klienci WHERE miasto <> 'Gdańsk';"]
-		}, {
-			cat: 'pattern',
-			q: "Wyświetl klientów o nazwisku zaczynającym się na 'Z'.",
-			schema: SCHEMA_KLIENCI,
-			a: ["SELECT * FROM Klienci WHERE nazwisko LIKE 'Z*';"]
-		}, {
-			cat: 'sort',
-			q: "Pobierz listę miast, w których mieszkają klienci (bez powtórzeń).",
-			schema: SCHEMA_KLIENCI,
-			a: ["SELECT DISTINCT miasto FROM Klienci;"]
-		}, {
-			cat: 'sort',
-			q: "Wyświetl klientów posortowanych według miasta, a następnie nazwiska.",
-			schema: SCHEMA_KLIENCI,
-			a: ["SELECT * FROM Klienci ORDER BY miasto, nazwisko;"]
-		}, {
-			cat: 'pattern',
-			q: "Znajdź klientów, których telefon kończy się cyfrą '0'.",
-			schema: SCHEMA_KLIENCI,
-			a: ["SELECT * FROM Klienci WHERE telefon LIKE '*0';"]
-		}, {
-			cat: 'filter',
-			q: "Wyświetl klientów z miasta 'Poznań' o nazwisku 'Bąk'.",
-			schema: SCHEMA_KLIENCI,
-			a: ["SELECT * FROM Klienci WHERE miasto = 'Poznań' AND nazwisko = 'Bąk';"]
-		}, {
-			cat: 'filter',
-			q: "Pobierz ID wszystkich klientów z miasta 'Wrocław'.",
-			schema: SCHEMA_KLIENCI,
-			a: ["SELECT id_klienta FROM Klienci WHERE miasto = 'Wrocław';"]
-		}
+	
+    const questionPool = [
+		{ cat: 'filter', q: "Wyświetl wszystkich uczniów z klasy '2B'.", schema: SCHEMA_UCZNIOWIE, a: ["SELECT * FROM Uczniowie WHERE klasa = '2B';"] }, 
+        { cat: 'filter', q: "Pobierz imiona i nazwiska uczniów, którzy są kobietami (plec = 'K').", schema: SCHEMA_UCZNIOWIE, a: ["SELECT imie, nazwisko FROM Uczniowie WHERE plec = 'K';"] }, 
+        { cat: 'filter', q: "Wyświetl uczniów o nazwisku 'Kowalski' lub 'Nowak'.", schema: SCHEMA_UCZNIOWIE, a: ["SELECT * FROM Uczniowie WHERE nazwisko IN ('Kowalski', 'Nowak');"] }, 
+        { cat: 'pattern', q: "Znajdź uczniów, których imię zaczyna się na literę 'A' (Access).", schema: SCHEMA_UCZNIOWIE, a: ["SELECT * FROM Uczniowie WHERE imie LIKE 'A*';"] }, 
+        { cat: 'filter', q: "Wyświetl uczniów, którzy NIE są z klas '1A' ani '1B'.", schema: SCHEMA_UCZNIOWIE, a: ["SELECT * FROM Uczniowie WHERE klasa NOT IN ('1A', '1B');"] }, 
+        { cat: 'sort', q: "Pobierz listę uczniów posortowaną alfabetycznie według nazwiska.", schema: SCHEMA_UCZNIOWIE, a: ["SELECT * FROM Uczniowie ORDER BY nazwisko ASC;"] }, 
+        { cat: 'pattern', q: "Wyświetl uczniów, których nazwisko kończy się na 'ski'.", schema: SCHEMA_UCZNIOWIE, a: ["SELECT * FROM Uczniowie WHERE nazwisko LIKE '*ski';"] }, 
+        { cat: 'date', q: "Pobierz listę uczniów urodzonych w 2008 roku (użyj funkcji YEAR).", schema: SCHEMA_UCZNIOWIE, a: ["SELECT * FROM Uczniowie WHERE YEAR(data_urodzenia) = 2008;"] }, 
+        { cat: 'date', q: "Wyświetl uczniów, którzy urodzili się w maju (użyj funkcji MONTH).", schema: SCHEMA_UCZNIOWIE, a: ["SELECT * FROM Uczniowie WHERE MONTH(data_urodzenia) = 5;"] }, 
+        { cat: 'date', q: "Znajdź uczniów urodzonych między 1 stycznia 2009 a 31 grudnia 2009 (użyj BETWEEN).", schema: SCHEMA_UCZNIOWIE, a: ["SELECT * FROM Uczniowie WHERE data_urodzenia BETWEEN '2009-01-01' AND '2009-12-31';", "SELECT * FROM Uczniowie WHERE YEAR(data_urodzenia) = 2009;"] },
+		{ cat: 'filter', q: "Pobierz nazwy produktów, których cena jest mniejsza lub równa 100.", schema: SCHEMA_PRODUKTY, a: ["SELECT nazwa FROM Produkty WHERE cena <= 100;"] }, 
+        { cat: 'sort', q: "Wyświetl produkty z kategorii 'RTV' posortowane od najdroższego.", schema: SCHEMA_PRODUKTY, a: ["SELECT * FROM Produkty WHERE kategoria = 'RTV' ORDER BY cena DESC;"] }, 
+        { cat: 'filter', q: "Znajdź produkty, których cena mieści się w przedziale od 50 do 200 zł.", schema: SCHEMA_PRODUKTY, a: ["SELECT * FROM Produkty WHERE cena BETWEEN 50 AND 200;"] }, 
+        { cat: 'pattern', q: "Pobierz produkty, których nazwa zawiera słowo 'Laptop'.", schema: SCHEMA_PRODUKTY, a: ["SELECT * FROM Produkty WHERE nazwa LIKE '*Laptop*';"] }, 
+        { cat: 'filter', q: "Wyświetl produkty, których ilość w magazynie jest mniejsza niż 5.", schema: SCHEMA_PRODUKTY, a: ["SELECT * FROM Produkty WHERE ilosc_magazyn < 5;"] }, 
+        { cat: 'sort', q: "Pobierz unikalne (różne) kategorie produktów.", schema: SCHEMA_PRODUKTY, a: ["SELECT DISTINCT kategoria FROM Produkty;"] }, 
+        { cat: 'filter', q: "Wyświetl produkty z kategorii 'AGD' lub 'Dom'.", schema: SCHEMA_PRODUKTY, a: ["SELECT * FROM Produkty WHERE kategoria IN ('AGD', 'Dom');"] },
+		{ cat: 'filter', q: "Znajdź oceny z przedmiotu 'Matematyka', które są równe 5 lub 6.", schema: SCHEMA_OCENY, a: ["SELECT * FROM Oceny WHERE przedmiot = 'Matematyka' AND ocena IN (5, 6);"] }, 
+        { cat: 'date', q: "Wyświetl oceny wystawione w październiku 2023 (Access LIKE).", schema: SCHEMA_OCENY, a: ["SELECT * FROM Oceny WHERE data_wystawienia LIKE '2023-10*';"] }, 
+        { cat: 'filter', q: "Pobierz oceny ucznia o id_ucznia = 10.", schema: SCHEMA_OCENY, a: ["SELECT * FROM Oceny WHERE id_ucznia = 10;"] }, 
+        { cat: 'sort', q: "Wyświetl oceny z 'Informatyka' wyższe niż 3, posortowane od najwyższej.", schema: SCHEMA_OCENY, a: ["SELECT * FROM Oceny WHERE przedmiot = 'Informatyka' AND ocena > 3 ORDER BY ocena DESC;"] }, 
+        { cat: 'date', q: "Znajdź oceny wystawione między '2023-09-01' a '2023-12-31'.", schema: SCHEMA_OCENY, a: ["SELECT * FROM Oceny WHERE data_wystawienia BETWEEN '2023-09-01' AND '2023-12-31';", "SELECT * FROM Oceny WHERE YEAR(data_wystawienia) = 2023 AND MONTH(data_wystawienia) BETWEEN 9 AND 12;", "SELECT * FROM Oceny WHERE YEAR(data_wystawienia) = 2023 AND MONTH(data_wystawienia) IN (9, 10, 11, 12);"] }, 
+        { cat: 'filter', q: "Wyświetl wszystkie oceny niedostateczne (ocena = 1).", schema: SCHEMA_OCENY, a: ["SELECT * FROM Oceny WHERE ocena = 1;"] }, 
+        { cat: 'filter', q: "Pobierz przedmioty, z których wystawiono ocenę 6.", schema: SCHEMA_OCENY, a: ["SELECT przedmiot FROM Oceny WHERE ocena = 6;"] },
+		{ cat: 'filter', q: "Wyświetl klientów z miasta 'Warszawa' lub 'Kraków'.", schema: SCHEMA_KLIENCI, a: ["SELECT * FROM Klienci WHERE miasto IN ('Warszawa', 'Kraków');"] }, 
+        { cat: 'pattern', q: "Znajdź klientów, których telefon zaczyna się od '605'.", schema: SCHEMA_KLIENCI, a: ["SELECT * FROM Klienci WHERE telefon LIKE '605*';"] }, 
+        { cat: 'filter', q: "Pobierz imiona i nazwiska klientów, którzy nie mieszkają w 'Gdańsku'.", schema: SCHEMA_KLIENCI, a: ["SELECT imie, nazwisko FROM Klienci WHERE miasto <> 'Gdańsk';"] }, 
+        { cat: 'pattern', q: "Wyświetl klientów o nazwisku zaczynającym się na 'Z'.", schema: SCHEMA_KLIENCI, a: ["SELECT * FROM Klienci WHERE nazwisko LIKE 'Z*';"] }, 
+        { cat: 'sort', q: "Pobierz listę miast, w których mieszkają klienci (bez powtórzeń).", schema: SCHEMA_KLIENCI, a: ["SELECT DISTINCT miasto FROM Klienci;"] }, 
+        { cat: 'sort', q: "Wyświetl klientów posortowanych według miasta, a następnie nazwiska.", schema: SCHEMA_KLIENCI, a: ["SELECT * FROM Klienci ORDER BY miasto, nazwisko;"] }, 
+        { cat: 'pattern', q: "Znajdź klientów, których telefon kończy cyfrą '0'.", schema: SCHEMA_KLIENCI, a: ["SELECT * FROM Klienci WHERE telefon LIKE '*0';"] }, 
+        { cat: 'filter', q: "Wyświetl klientów z miasta 'Poznań' o nazwisku 'Bąk'.", schema: SCHEMA_KLIENCI, a: ["SELECT * FROM Klienci WHERE miasto = 'Poznań' AND nazwisko = 'Bąk';"] }, 
+        { cat: 'filter', q: "Pobierz ID wszystkich klientów z miasta 'Wrocław'.", schema: SCHEMA_KLIENCI, a: ["SELECT id_klienta FROM Klienci WHERE miasto = 'Wrocław';"] }
 	];
 
 	function generateQuiz() {
@@ -1590,7 +1510,7 @@ PIVOT Przedmiot;</pre>
 		const categories = ['date', 'pattern', 'filter', 'sort'];
 		let selected = [];
 		let usedIds = new Set();
-		// 1. Wybór pytań po jednym z kategorii
+		
 		categories.forEach(category => {
 			const catQuestions = questionPool.filter(q => q.cat === category);
 			if(catQuestions.length > 0) {
@@ -1599,15 +1519,15 @@ PIVOT Przedmiot;</pre>
 				usedIds.add(questionPool.indexOf(randomQ));
 			}
 		});
-		// 2. Dobranie do 5
+		
 		const remainingPool = questionPool.filter((_, index) => !usedIds.has(index));
 		const shuffledRemaining = remainingPool.sort(() => 0.5 - Math.random());
 		while(selected.length < 5 && shuffledRemaining.length > 0) {
 			selected.push(shuffledRemaining.pop());
 		}
-		// 3. Losowa kolejność wyświetlania
+		
 		selected.sort(() => 0.5 - Math.random());
-		// 4. Renderowanie - CZYSTY HTML zgodny z Twoim CSS
+		
 		selected.forEach((item, index) => {
 			const div = document.createElement('div');
 			div.className = 'task-box quiz-task';
@@ -1637,55 +1557,38 @@ PIVOT Przedmiot;</pre>
 		const inputField = document.getElementById(`ans-${id}`);
 		const feedback = document.getElementById(`feedback-${id}`);
 		const normalize = (sql) => {
-			// 0. Inicjalizacja i podstawowe czyszczenie
-			let clean = sql.trim().toLowerCase().replace(/;/g, '') // Usuń średnik
-				.replace(/"/g, "'") // Cudzysłów -> Apostrof
-				.replace(/\s+/g, ' '); // Podwójne spacje na pojedyncze
-			// Usuń spacje między nazwą funkcji a nawiasem, np. YEAR (data) -> YEAR(data)
+			let clean = sql.trim().toLowerCase().replace(/;/g, '').replace(/"/g, "'").replace(/\s+/g, ' ');
 			clean = clean.replace(/(year|month|day|in)\s+\(/g, '$1(');
-			// 1. Standaryzacja liczb w apostrofach ('5' -> 5)
 			clean = clean.replace(/'(\d+)'/g, "$1");
-			// 2. LIKE 'YYYY-MM*' -> BETWEEN 'YYYY-MM-01' AND 'YYYY-MM-31'
 			clean = clean.replace(/like\s*'(\d{4}-\d{2})\*'/g, "between '$1-01' and '$1-31'");
-			// 3. Daty >= D1 AND <= D2 -> BETWEEN D1 AND D2
 			clean = clean.replace(/(\w+)\s*>=\s*'([^']+)'\s*and\s*\1\s*<=\s*'([^']+)'/g, "$1 between '$2' and '$3'");
 			clean = clean.replace(/(\w+)\s*<=\s*'([^']+)'\s*and\s*\1\s*>=\s*'([^']+)'/g, "$1 between '$3' and '$2'");
-			// 4. BETWEEN a AND b -> IN(a...b) (Dla liczb całkowitych)
 			clean = clean.replace(/between\s+(\d+)\s+and\s+(\d+)/g, (match, p1, p2) => {
-				let min = Math.min(p1, p2),
-					max = Math.max(p1, p2);
+				let min = Math.min(p1, p2), max = Math.max(p1, p2);
 				let range = [];
 				for(let i = min; i <= max; i++) range.push(i);
 				return `in(${range.join(',')})`;
 			});
-			// 5. Liczby >= a AND <= b -> IN(a...b)
 			clean = clean.replace(/(\w+)\s*>=\s*(\d+)\s*and\s*\1\s*<=\s*(\d+)/g, (match, col, p1, p2) => {
-				let min = Math.min(p1, p2),
-					max = Math.max(p1, p2);
+				let min = Math.min(p1, p2), max = Math.max(p1, p2);
 				let range = [];
 				for(let i = min; i <= max; i++) range.push(i);
 				return `${col} in(${range.join(',')})`;
 			});
-			// 6. OR dla tych samych kolumn (ocena=5 or ocena=6) -> IN(5,6)
 			clean = clean.replace(/(\w+)\s*=\s*(\d+)\s*or\s*\1\s*=\s*(\d+)/g, "$1 in($2,$3)");
-			// 7. LIKE (bez gwiazdek) -> równość
 			clean = clean.replace(/\blike\s+'([^'*%]+)'/g, "='$1'");
-			// 8. IN dla jednego elementu -> równość
 			clean = clean.replace(/\bin\s*\(\s*'([^']+)'\s*\)/g, "='$1'");
 			clean = clean.replace(/\bin\s*\(\s*(\d+)\s*\)/g, "=$1");
-			// 9. Sortowanie IN (żeby IN(6,5) = IN(5,6))
 			clean = clean.replace(/in\s*\(([^)]+)\)/g, (match, inner) => {
 				let items = inner.split(',').map(x => x.trim()).sort();
 				return `in(${items.join(',')})`;
 			});
-			// 10. Zdzieranie zbędnych nawiasów
 			for(let i = 0; i < 3; i++) {
 				clean = clean.replace(/\(([^()]+)\)/g, (match, inner) => {
 					if(!inner.includes('and') && !inner.includes('or')) return inner;
 					return match;
 				});
 			}
-			// 11. OSTATECZNY KROK: Usunięcie ABSOLUTNIE WSZYSTKICH spacji
 			clean = clean.replace(/\s+/g, '');
 			return clean;
 		};
@@ -1700,7 +1603,6 @@ PIVOT Przedmiot;</pre>
 			inputField.style.borderColor = "#27ae60";
 			inputField.style.backgroundColor = "#f1fcf4";
 			inputField.disabled = true;
-			// Ukryj przycisk po sukcesie
 			const btn = inputField.parentElement.querySelector('.quiz-check-btn');
 			if(btn) btn.style.display = 'none';
 		} else {
@@ -1723,13 +1625,28 @@ PIVOT Przedmiot;</pre>
 			const info = document.getElementById('m2-completion-info');
 			if(info) {
 				info.style.display = 'block';
-				info.scrollIntoView({
-					behavior: 'smooth'
-				});
+				info.scrollIntoView({ behavior: 'smooth' });
 			}
 		}
 	}
-	window.onload = generateQuiz;
+	
+    window.onload = generateQuiz;
+
+    /* FUNKCJE MENU MOBILNEGO */
+    function toggleMenu() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('active');
+    }
+
+    // Zamykanie po kliknięciu w link na małych ekranach
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('active');
+            }
+        });
+    });
+
 	</script>
 </body>
 
